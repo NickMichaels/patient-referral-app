@@ -42,6 +42,9 @@ class Practicioner
     #[ORM\OneToOne(mappedBy: 'receiving_practicioner', cascade: ['persist', 'remove'])]
     private ?PatientReferral $patientReferralsReceived = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
+
     public function __construct()
     {
         $this->provider = new ArrayCollection();
@@ -176,6 +179,18 @@ class Practicioner
         }
 
         $this->patientReferralsReceived = $patientReferralsReceived;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }
