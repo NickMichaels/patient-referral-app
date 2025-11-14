@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProviderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProviderRepository::class)]
@@ -36,6 +38,17 @@ class Provider
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
+
+    /**
+     * @var Collection<int, Practicioner>
+     */
+    #[ORM\ManyToMany(targetEntity: Practicioner::class, mappedBy: 'provider')]
+    private Collection $practicioners;
+
+    public function __construct()
+    {
+        $this->practicioners = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -134,6 +147,33 @@ class Provider
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Practicioner>
+     */
+    public function getPracticioners(): Collection
+    {
+        return $this->practicioners;
+    }
+
+    public function addPracticioner(Practicioner $practicioner): static
+    {
+        if (!$this->practicioners->contains($practicioner)) {
+            $this->practicioners->add($practicioner);
+            $practicioner->addProvider($this);
+        }
+
+        return $this;
+    }
+
+    public function removePracticioner(Practicioner $practicioner): static
+    {
+        if ($this->practicioners->removeElement($practicioner)) {
+            $practicioner->removeProvider($this);
+        }
 
         return $this;
     }
