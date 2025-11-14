@@ -33,7 +33,7 @@ class Practicioner
     #[ORM\ManyToMany(targetEntity: Provider::class, inversedBy: 'practicioners')]
     private Collection $provider;
 
-    #[ORM\Column(length: 15)]
+    #[ORM\Column(length: 50)]
     private ?string $phone = null;
 
     #[ORM\OneToOne(mappedBy: 'sending_practicioner', cascade: ['persist', 'remove'])]
