@@ -48,6 +48,12 @@ class Provider
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
+    #[ORM\OneToOne(mappedBy: 'sending_provider', cascade: ['persist', 'remove'])]
+    private ?PatientReferral $patientReferralsSent = null;
+
+    #[ORM\OneToOne(mappedBy: 'receiving_provider', cascade: ['persist', 'remove'])]
+    private ?PatientReferral $patientReferralsReceived = null;
+
     public function __construct()
     {
         $this->practicioners = new ArrayCollection();
@@ -189,6 +195,40 @@ class Provider
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPatientReferralsSent(): ?PatientReferral
+    {
+        return $this->patientReferralsSent;
+    }
+
+    public function setPatientReferralsSent(PatientReferral $patientReferralsSent): static
+    {
+        // set the owning side of the relation if necessary
+        if ($patientReferralsSent->getSendingProvider() !== $this) {
+            $patientReferralsSent->getSendingProvider($this);
+        }
+
+        $this->patientReferralsSent = $patientReferralsSent;
+
+        return $this;
+    }
+
+    public function getPatientReferralsReceived(): ?PatientReferral
+    {
+        return $this->patientReferralsReceived;
+    }
+
+    public function setPatientReferralsReceived(PatientReferral $patientReferralsReceived): static
+    {
+        // set the owning side of the relation if necessary
+        if ($patientReferralsReceived->getReceivingProvider() !== $this) {
+            $patientReferralsReceived->setReceivingProvider($this);
+        }
+
+        $this->patientReferralsReceived = $patientReferralsReceived;
 
         return $this;
     }

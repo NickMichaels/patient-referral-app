@@ -25,6 +25,9 @@ class Patient
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
+    #[ORM\OneToOne(mappedBy: 'patient', cascade: ['persist', 'remove'])]
+    private ?PatientReferral $patientReferral = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,23 @@ class Patient
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPatientReferral(): ?PatientReferral
+    {
+        return $this->patientReferral;
+    }
+
+    public function setPatientReferral(PatientReferral $patientReferral): static
+    {
+        // set the owning side of the relation if necessary
+        if ($patientReferral->getPatient() !== $this) {
+            $patientReferral->setPatient($this);
+        }
+
+        $this->patientReferral = $patientReferral;
 
         return $this;
     }
