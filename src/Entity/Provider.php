@@ -45,6 +45,9 @@ class Provider
     #[ORM\ManyToMany(targetEntity: Practicioner::class, mappedBy: 'provider')]
     private Collection $practicioners;
 
+    #[ORM\Column(length: 15)]
+    private ?string $phone = null;
+
     public function __construct()
     {
         $this->practicioners = new ArrayCollection();
@@ -174,6 +177,18 @@ class Provider
         if ($this->practicioners->removeElement($practicioner)) {
             $practicioner->removeProvider($this);
         }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }
