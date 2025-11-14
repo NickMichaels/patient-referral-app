@@ -24,7 +24,7 @@ class Provider
     #[ORM\Column(length: 255)]
     private ?string $address_line1 = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $address_line2 = null;
 
     #[ORM\Column(length: 255)]
