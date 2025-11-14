@@ -29,6 +29,12 @@ class PatientReferral
     #[ORM\Column(enumType: PatientReferralStatus::class)]
     private ?PatientReferralStatus $status = null;
 
+    #[ORM\OneToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
+    private ?Practicioner $sending_practicioner = null;
+
+    #[ORM\OneToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
+    private ?Practicioner $receiving_practicioner = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -78,6 +84,30 @@ class PatientReferral
     public function setStatus(PatientReferralStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getSendingPracticioner(): ?Practicioner
+    {
+        return $this->sending_practicioner;
+    }
+
+    public function setSendingPracticioner(?Practicioner $sending_practicioner): static
+    {
+        $this->sending_practicioner = $sending_practicioner;
+
+        return $this;
+    }
+
+    public function getReceivingPracticioner(): ?Practicioner
+    {
+        return $this->receiving_practicioner;
+    }
+
+    public function setReceivingPracticioner(?Practicioner $receiving_practicioner): static
+    {
+        $this->receiving_practicioner = $receiving_practicioner;
 
         return $this;
     }

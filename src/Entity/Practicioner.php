@@ -36,6 +36,12 @@ class Practicioner
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
+    #[ORM\OneToOne(mappedBy: 'sending_practicioner', cascade: ['persist', 'remove'])]
+    private ?PatientReferral $patientReferralsSent = null;
+
+    #[ORM\OneToOne(mappedBy: 'receiving_practicioner', cascade: ['persist', 'remove'])]
+    private ?PatientReferral $patientReferralsReceived = null;
+
     public function __construct()
     {
         $this->provider = new ArrayCollection();
@@ -126,6 +132,50 @@ class Practicioner
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPatientReferralsSent(): ?PatientReferral
+    {
+        return $this->patientReferralsSent;
+    }
+
+    public function setPatientReferralsSent(?PatientReferral $patientReferralsSent): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($patientReferralsSent === null && $this->patientReferralsSent !== null) {
+            $this->patientReferralsSent->setSendingPracticioner(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($patientReferralsSent !== null && $patientReferralsSent->getSendingPracticioner() !== $this) {
+            $patientReferralsSent->setSendingPracticioner($this);
+        }
+
+        $this->patientReferralsSent = $patientReferralsSent;
+
+        return $this;
+    }
+
+    public function getPatientReferralsReceived(): ?PatientReferral
+    {
+        return $this->patientReferralsReceived;
+    }
+
+    public function setPatientReferralsReceived(?PatientReferral $patientReferralsReceived): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($patientReferralsReceived === null && $this->patientReferralsReceived !== null) {
+            $this->patientReferralsReceived->setReceivingPracticioner(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($patientReferralsReceived !== null && $patientReferralsReceived->getReceivingPracticioner() !== $this) {
+            $patientReferralsReceived->setReceivingPracticioner($this);
+        }
+
+        $this->patientReferralsReceived = $patientReferralsReceived;
 
         return $this;
     }
