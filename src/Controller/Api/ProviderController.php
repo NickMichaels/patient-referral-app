@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Provider;
+use App\Entity\Practicioner;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -86,5 +87,27 @@ final class ProviderController extends AbstractController
         $em->flush();
 
         return $this->json(null, 204);
+    }
+
+    #[Route("/api/providers/{id}/add_practicioner", methods: ["POST"])]
+    public function add_practioner(Request $request,
+                                   SerializerInterface $serializer,
+                                   EntityManagerInterface $em,
+                                   ValidatorInterface $validator,
+                                   Provider $provider): JsonResponse
+    {
+        $content = $request->getContent();
+        $json = json_decode($content);
+
+        $practicionerId = $json->practicioner_id;
+        $practicioner = $em->getRepository(Practicioner::class)->findOneBy(['id' => $practicionerId]);
+
+        if ($practicioner instanceof Practicioner) {
+            $provider->addPracticioner($practicioner);
+            $em->flush();
+            return $this->json("Practicioner added to provider", 200);
+        } else {
+            return $this->json("Practicioner does not exist", 404);
+        }
     }
 }
