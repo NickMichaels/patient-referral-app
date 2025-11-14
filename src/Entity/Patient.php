@@ -22,7 +22,7 @@ class Patient
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 15)]
+    #[ORM\Column(length: 50)]
     private ?string $phone = null;
 
     #[ORM\OneToOne(mappedBy: 'patient', cascade: ['persist', 'remove'])]
