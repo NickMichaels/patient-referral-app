@@ -14,25 +14,25 @@ class PatientReferral
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'patientReferral', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferral', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Patient $patient = null;
 
-    #[ORM\OneToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Provider $sending_provider = null;
 
-    #[ORM\OneToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Provider $receiving_provider = null;
 
     #[ORM\Column(enumType: PatientReferralStatus::class)]
     private ?PatientReferralStatus $status = null;
 
-    #[ORM\OneToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
     private ?Practicioner $sending_practicioner = null;
 
-    #[ORM\OneToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
     private ?Practicioner $receiving_practicioner = null;
 
     public function getId(): ?int
