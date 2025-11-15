@@ -2,38 +2,55 @@
 
 namespace App\Entity;
 
+use JsonSerializable;
+use Doctrine\ORM\Mapping as ORM;
 use App\Enum\PatientReferralStatus;
 use App\Repository\PatientReferralRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: PatientReferralRepository::class)]
-class PatientReferral
+class PatientReferral implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'patientReferral', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferrals')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Patient $patient = null;
 
-    #[ORM\ManyToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsSent')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Provider $sending_provider = null;
 
-    #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Provider $receiving_provider = null;
+
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsSent')]
+    private ?Practicioner $sending_practicioner = null;
+
+    #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived')]
+    private ?Practicioner $receiving_practicioner = null;
 
     #[ORM\Column(enumType: PatientReferralStatus::class)]
     private ?PatientReferralStatus $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'patientReferralsSent', cascade: ['persist', 'remove'])]
-    private ?Practicioner $sending_practicioner = null;
-
-    #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived', cascade: ['persist', 'remove'])]
-    private ?Practicioner $receiving_practicioner = null;
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'patient' => $this->getPatient()->getId(),
+            'sending_provider' => $this->getSendingProvider()->getId(),
+            'receiving_provider' => $this->getReceivingProvider()->getId(),
+            'sending_practicioner' => ($this->getSendingPracticioner() !== null) ? 
+                $this->getSendingPracticioner()->getId() : '',
+            'receiving_practicioner' => ($this->getReceivingPracticioner() !== null) ? 
+                $this->getReceivingPracticioner()->getId() : '',
+            'status' => $this->getStatus()->value,
+        ];
+    }
 
     public function getId(): ?int
     {
@@ -45,7 +62,7 @@ class PatientReferral
         return $this->patient;
     }
 
-    public function setPatient(Patient $patient): static
+    public function setPatient(?Patient $patient): static
     {
         $this->patient = $patient;
 
@@ -57,7 +74,7 @@ class PatientReferral
         return $this->sending_provider;
     }
 
-    public function setSendingProvider(Provider $sending_provider): static
+    public function setSendingProvider(?Provider $sending_provider): static
     {
         $this->sending_provider = $sending_provider;
 
@@ -69,21 +86,9 @@ class PatientReferral
         return $this->receiving_provider;
     }
 
-    public function setReceivingProvider(Provider $receiving_provider): static
+    public function setReceivingProvider(?Provider $receiving_provider): static
     {
         $this->receiving_provider = $receiving_provider;
-
-        return $this;
-    }
-
-    public function getStatus(): ?PatientReferralStatus
-    {
-        return $this->status;
-    }
-
-    public function setStatus(PatientReferralStatus $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -108,6 +113,18 @@ class PatientReferral
     public function setReceivingPracticioner(?Practicioner $receiving_practicioner): static
     {
         $this->receiving_practicioner = $receiving_practicioner;
+
+        return $this;
+    }
+
+    public function getStatus(): ?PatientReferralStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(PatientReferralStatus $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

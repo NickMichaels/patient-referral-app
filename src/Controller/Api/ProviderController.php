@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ProviderController extends AbstractController
@@ -124,8 +125,6 @@ final class ProviderController extends AbstractController
         $content = $request->getContent();
         $json = json_decode($content);
 
-       // die(var_dump($json));
-
         if (!property_exists($json, 'patient_id')) {
             return $this->json("No patient id passed in request", 404);
         } else if (!property_exists($json, 'receiving_provider_id')) {
@@ -138,8 +137,6 @@ final class ProviderController extends AbstractController
         $receiving_provider = $em->getRepository(Provider::class)->findOneBy(
             ['id' => $json->receiving_provider_id]
         );
-
-
 
         if (!$patient instanceof Patient) {
             return $this->json("Patient does not exist", 404);
@@ -156,5 +153,23 @@ final class ProviderController extends AbstractController
         $em->persist($patientReferral);
         $em->flush();
         return $this->json("Patient referral sent", 200);
+    }
+
+    #[Route("/api/providers/{id}/referrals_sent", methods: ["GET"])]
+    public function get_referrals_sent(EntityManagerInterface $em,
+                                       Provider $provider,
+                                       SerializerInterface $serializer): JsonResponse
+    {
+        $referralsSent = $provider->getPatientReferralsSent();
+
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($referralsSent, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
+
     }
 }

@@ -48,15 +48,23 @@ class Provider
     #[ORM\Column(length: 50)]
     private ?string $phone = null;
 
-    #[ORM\OneToOne(mappedBy: 'sending_provider', cascade: ['persist', 'remove'])]
-    private ?PatientReferral $patientReferralsSent = null;
+    /**
+     * @var Collection<int, PatientReferral>
+     */
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sending_provider')]
+    private Collection $patientReferralsSent;
 
-    #[ORM\OneToOne(mappedBy: 'receiving_provider', cascade: ['persist', 'remove'])]
-    private ?PatientReferral $patientReferralsReceived = null;
+    /**
+     * @var Collection<int, PatientReferral>
+     */
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receiving_provider')]
+    private Collection $patientReferralsReceived;
 
     public function __construct()
     {
         $this->practicioners = new ArrayCollection();
+        $this->patientReferralsSent = new ArrayCollection();
+        $this->patientReferralsReceived = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -199,37 +207,64 @@ class Provider
         return $this;
     }
 
-    public function getPatientReferralsSent(): ?PatientReferral
+    /**
+     * @return Collection<int, PatientReferral>
+     */
+    public function getPatientReferralsSent(): Collection
     {
         return $this->patientReferralsSent;
     }
 
-    public function setPatientReferralsSent(PatientReferral $patientReferralsSent): static
+    public function addPatientReferralsSent(PatientReferral $patientReferralsSent): static
     {
-        // set the owning side of the relation if necessary
-        if ($patientReferralsSent->getSendingProvider() !== $this) {
-            $patientReferralsSent->getSendingProvider($this);
+        if (!$this->patientReferralsSent->contains($patientReferralsSent)) {
+            $this->patientReferralsSent->add($patientReferralsSent);
+            $patientReferralsSent->setSendingProvider($this);
         }
-
-        $this->patientReferralsSent = $patientReferralsSent;
 
         return $this;
     }
 
-    public function getPatientReferralsReceived(): ?PatientReferral
+    public function removePatientReferralsSent(PatientReferral $patientReferralsSent): static
+    {
+        if ($this->patientReferralsSent->removeElement($patientReferralsSent)) {
+            // set the owning side to null (unless already changed)
+            if ($patientReferralsSent->getSendingProvider() === $this) {
+                $patientReferralsSent->setSendingProvider(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PatientReferral>
+     */
+    public function getPatientReferralsReceived(): Collection
     {
         return $this->patientReferralsReceived;
     }
 
-    public function setPatientReferralsReceived(PatientReferral $patientReferralsReceived): static
+    public function addPatientReferralsReceived(PatientReferral $patientReferralsReceived): static
     {
-        // set the owning side of the relation if necessary
-        if ($patientReferralsReceived->getReceivingProvider() !== $this) {
+        if (!$this->patientReferralsReceived->contains($patientReferralsReceived)) {
+            $this->patientReferralsReceived->add($patientReferralsReceived);
             $patientReferralsReceived->setReceivingProvider($this);
         }
 
-        $this->patientReferralsReceived = $patientReferralsReceived;
+        return $this;
+    }
+
+    public function removePatientReferralsReceived(PatientReferral $patientReferralsReceived): static
+    {
+        if ($this->patientReferralsReceived->removeElement($patientReferralsReceived)) {
+            // set the owning side to null (unless already changed)
+            if ($patientReferralsReceived->getReceivingProvider() === $this) {
+                $patientReferralsReceived->setReceivingProvider(null);
+            }
+        }
 
         return $this;
     }
+
 }

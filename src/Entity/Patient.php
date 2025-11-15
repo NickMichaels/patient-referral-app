@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PatientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
@@ -25,8 +27,16 @@ class Patient
     #[ORM\Column(length: 50)]
     private ?string $phone = null;
 
-    #[ORM\OneToOne(mappedBy: 'patient', cascade: ['persist', 'remove'])]
-    private ?PatientReferral $patientReferral = null;
+    /**
+     * @var Collection<int, PatientReferral>
+     */
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'patient')]
+    private Collection $patientReferrals;
+
+    public function __construct()
+    {
+        $this->patientReferrals = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,19 +91,32 @@ class Patient
         return $this;
     }
 
-    public function getPatientReferral(): ?PatientReferral
+    /**
+     * @return Collection<int, PatientReferral>
+     */
+    public function getPatientReferrals(): Collection
     {
-        return $this->patientReferral;
+        return $this->patientReferrals;
     }
 
-    public function setPatientReferral(PatientReferral $patientReferral): static
+    public function addPatientReferral(PatientReferral $patientReferral): static
     {
-        // set the owning side of the relation if necessary
-        if ($patientReferral->getPatient() !== $this) {
+        if (!$this->patientReferrals->contains($patientReferral)) {
+            $this->patientReferrals->add($patientReferral);
             $patientReferral->setPatient($this);
         }
 
-        $this->patientReferral = $patientReferral;
+        return $this;
+    }
+
+    public function removePatientReferral(PatientReferral $patientReferral): static
+    {
+        if ($this->patientReferrals->removeElement($patientReferral)) {
+            // set the owning side to null (unless already changed)
+            if ($patientReferral->getPatient() === $this) {
+                $patientReferral->setPatient(null);
+            }
+        }
 
         return $this;
     }
