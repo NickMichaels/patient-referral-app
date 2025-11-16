@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use DateTime;
 use App\Entity\Patient;
 use App\Entity\Provider;
 use App\Entity\Practicioner;
@@ -149,6 +150,7 @@ final class ProviderController extends AbstractController
         $patientReferral->setSendingProvider($provider);
         $patientReferral->setReceivingProvider($receiving_provider);
         $patientReferral->setStatus(PatientReferralStatus::Pending);
+        $patientReferral->setDateSent(new DateTime());
 
         $em->persist($patientReferral);
         $em->flush();

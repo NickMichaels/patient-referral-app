@@ -37,6 +37,9 @@ class PatientReferral implements JsonSerializable
     #[ORM\Column(enumType: PatientReferralStatus::class)]
     private ?PatientReferralStatus $status = null;
 
+    #[ORM\Column]
+    private ?\DateTime $dateSent = null;
+
     public function jsonSerialize(): array
     {
         return [
@@ -49,6 +52,7 @@ class PatientReferral implements JsonSerializable
             'receiving_practicioner' => ($this->getReceivingPracticioner() !== null) ? 
                 $this->getReceivingPracticioner()->getId() : '',
             'status' => $this->getStatus()->value,
+            'date_sent' => $this->getDateSent()->format('m-d-Y h:m:s'),
         ];
     }
 
@@ -125,6 +129,18 @@ class PatientReferral implements JsonSerializable
     public function setStatus(PatientReferralStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDateSent(): ?\DateTime
+    {
+        return $this->dateSent;
+    }
+
+    public function setDateSent(\DateTime $dateSent): static
+    {
+        $this->dateSent = $dateSent;
 
         return $this;
     }
