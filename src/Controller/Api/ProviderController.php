@@ -152,6 +152,27 @@ final class ProviderController extends AbstractController
         $patientReferral->setStatus(PatientReferralStatus::Pending);
         $patientReferral->setDateSent(new DateTime());
 
+        // Handle optional practicioner cases here
+        if (property_exists($json, 'sending_practicioner_id')) {
+            $sending_practicioner = $em->getRepository(Practicioner::class)->findOneBy(
+                ['id' => $json->sending_practicioner_id]
+            );
+
+            if ($sending_practicioner instanceof Practicioner) {
+                $patientReferral->setSendingPracticioner($sending_practicioner);
+            }
+        }
+
+        if (property_exists($json, 'receiving_practicioner_id')) {
+            $receiving_practicioner = $em->getRepository(Practicioner::class)->findOneBy(
+                ['id' => $json->receiving_practicioner_id]
+            );
+
+            if ($receiving_practicioner instanceof Practicioner) {
+                $patientReferral->setReceivingPracticioner($receiving_practicioner);
+            }
+        }
+
         $em->persist($patientReferral);
         $em->flush();
         return $this->json("Patient referral sent", 200);
@@ -177,8 +198,8 @@ final class ProviderController extends AbstractController
 
     #[Route("/api/providers/{id}/referrals_received", methods: ["GET"])]
     public function get_referrals_received(EntityManagerInterface $em,
-                                       Provider $provider,
-                                       SerializerInterface $serializer): JsonResponse
+                                           Provider $provider,
+                                           SerializerInterface $serializer): JsonResponse
     {
         $referralsReceived = $provider->getPatientReferralsReceived();
 
