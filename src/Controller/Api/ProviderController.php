@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use DateTime;
 use App\Entity\Patient;
 use App\Entity\Provider;
+use App\Cache\ProviderCache;
 use App\Entity\Practicioner;
 use App\Entity\PatientReferral;
 use App\Enum\PatientReferralStatus;
@@ -22,13 +23,19 @@ final class ProviderController extends AbstractController
 {
     #[Route('/api/providers', methods: ["GET"])]
     public function index(EntityManagerInterface $em,
-                          SerializerInterface $serializer): JsonResponse
+                          SerializerInterface $serializer,
+                          ProviderCache $providerCache): JsonResponse
     {
-        $providers = $em->getRepository(Provider::class)->findAll();
+        //$providers = $em->getRepository(Provider::class)->findAll();
+        $providers = $providerCache->findAll();
 
-        $jsonContent = $serializer->serialize($providers, "json",[
-            ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
-        ]);
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($providers, 'json', $context);
+
         return JsonResponse::fromJsonString($jsonContent);
     }
 
