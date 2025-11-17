@@ -51,13 +51,13 @@ class Provider
     /**
      * @var Collection<int, PatientReferral>
      */
-    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sending_provider')]
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sendingProvider')]
     private Collection $patientReferralsSent;
 
     /**
      * @var Collection<int, PatientReferral>
      */
-    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receiving_provider')]
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receivingProvider')]
     private Collection $patientReferralsReceived;
 
     public function __construct()

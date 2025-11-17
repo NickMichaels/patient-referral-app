@@ -22,17 +22,17 @@ class PatientReferral implements JsonSerializable
 
     #[ORM\ManyToOne(inversedBy: 'patientReferralsSent')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Provider $sending_provider = null;
+    private ?Provider $sendingProvider = null;
 
     #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Provider $receiving_provider = null;
+    private ?Provider $receivingProvider = null;
 
     #[ORM\ManyToOne(inversedBy: 'patientReferralsSent')]
-    private ?Practicioner $sending_practicioner = null;
+    private ?Practicioner $sendingPracticioner = null;
 
     #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived')]
-    private ?Practicioner $receiving_practicioner = null;
+    private ?Practicioner $receivingPracticioner = null;
 
     #[ORM\Column(enumType: PatientReferralStatus::class)]
     private ?PatientReferralStatus $status = null;
@@ -45,14 +45,14 @@ class PatientReferral implements JsonSerializable
         return [
             'id' => $this->getId(),
             'patient' => $this->getPatient()->getId(),
-            'sending_provider' => $this->getSendingProvider()->getId(),
-            'receiving_provider' => $this->getReceivingProvider()->getId(),
-            'sending_practicioner' => ($this->getSendingPracticioner() !== null) ? 
+            'sendingProvider' => $this->getSendingProvider()->getId(),
+            'receivingProvider' => $this->getReceivingProvider()->getId(),
+            'sendingPracticioner' => ($this->getSendingPracticioner() !== null) ? 
                 $this->getSendingPracticioner()->getId() : '',
-            'receiving_practicioner' => ($this->getReceivingPracticioner() !== null) ? 
+            'receivingPracticioner' => ($this->getReceivingPracticioner() !== null) ? 
                 $this->getReceivingPracticioner()->getId() : '',
             'status' => $this->getStatus()->value,
-            'date_sent' => $this->getDateSent()->format('m-d-Y h:m:s'),
+            'dateSent' => $this->getDateSent()->format('m-d-Y h:m:s'),
         ];
     }
 
@@ -75,48 +75,48 @@ class PatientReferral implements JsonSerializable
 
     public function getSendingProvider(): ?Provider
     {
-        return $this->sending_provider;
+        return $this->sendingProvider;
     }
 
-    public function setSendingProvider(?Provider $sending_provider): static
+    public function setSendingProvider(?Provider $sendingProvider): static
     {
-        $this->sending_provider = $sending_provider;
+        $this->sendingProvider = $sendingProvider;
 
         return $this;
     }
 
     public function getReceivingProvider(): ?Provider
     {
-        return $this->receiving_provider;
+        return $this->receivingProvider;
     }
 
-    public function setReceivingProvider(?Provider $receiving_provider): static
+    public function setReceivingProvider(?Provider $receivingProvider): static
     {
-        $this->receiving_provider = $receiving_provider;
+        $this->receivingProvider = $receivingProvider;
 
         return $this;
     }
 
     public function getSendingPracticioner(): ?Practicioner
     {
-        return $this->sending_practicioner;
+        return $this->sendingPracticioner;
     }
 
-    public function setSendingPracticioner(?Practicioner $sending_practicioner): static
+    public function setSendingPracticioner(?Practicioner $sendingPracticioner): static
     {
-        $this->sending_practicioner = $sending_practicioner;
+        $this->sendingPracticioner = $sendingPracticioner;
 
         return $this;
     }
 
     public function getReceivingPracticioner(): ?Practicioner
     {
-        return $this->receiving_practicioner;
+        return $this->receivingPracticioner;
     }
 
-    public function setReceivingPracticioner(?Practicioner $receiving_practicioner): static
+    public function setReceivingPracticioner(?Practicioner $receivingPracticioner): static
     {
-        $this->receiving_practicioner = $receiving_practicioner;
+        $this->receivingPracticioner = $receivingPracticioner;
 
         return $this;
     }

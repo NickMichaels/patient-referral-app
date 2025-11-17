@@ -42,13 +42,13 @@ class Practicioner
     /**
      * @var Collection<int, PatientReferral>
      */
-    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sending_practicioner')]
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sendingPracticioner')]
     private Collection $patientReferralsSent;
 
     /**
      * @var Collection<int, PatientReferral>
      */
-    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receiving_practicioner')]
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receivingPracticioner')]
     private Collection $patientReferralsReceived;
 
 
