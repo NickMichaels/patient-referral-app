@@ -39,11 +39,18 @@ final class ProviderController extends AbstractController
         return JsonResponse::fromJsonString($jsonContent);
     }
 
-
     #[Route("/api/providers/{id}", methods: ["GET"])]
-    public function show(Provider $provider): JsonResponse
+    public function show(Provider $provider, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($provider);
+
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($provider, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
     #[Route("/api/providers", methods: ["POST"])]
@@ -87,7 +94,14 @@ final class ProviderController extends AbstractController
 
         $em->flush();
 
-        return $this->json($provider);
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($provider, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
     #[Route("/api/providers/{id}", methods: ["DELETE"])]
@@ -102,7 +116,7 @@ final class ProviderController extends AbstractController
     }
 
     #[Route("/api/providers/{id}/add_practicioner", methods: ["POST"])]
-    public function add_practioner(Request $request,
+    public function addPracticioner(Request $request,
                                    EntityManagerInterface $em,
                                    Provider $provider): JsonResponse
     {
@@ -126,7 +140,7 @@ final class ProviderController extends AbstractController
     }
 
     #[Route("/api/providers/{id}/send_referral", methods: ["POST"])]
-    public function send_referral(Request $request,
+    public function sendPatientReferral(Request $request,
                                   EntityManagerInterface $em,
                                   Provider $provider): JsonResponse
     {
@@ -186,7 +200,7 @@ final class ProviderController extends AbstractController
     }
 
     #[Route("/api/providers/{id}/referrals_sent", methods: ["GET"])]
-    public function get_referrals_sent(EntityManagerInterface $em,
+    public function getReferralsSent(EntityManagerInterface $em,
                                        Provider $provider,
                                        SerializerInterface $serializer): JsonResponse
     {
@@ -204,7 +218,7 @@ final class ProviderController extends AbstractController
     }
 
     #[Route("/api/providers/{id}/referrals_received", methods: ["GET"])]
-    public function get_referrals_received(EntityManagerInterface $em,
+    public function getReferralsReceived(EntityManagerInterface $em,
                                            Provider $provider,
                                            SerializerInterface $serializer): JsonResponse
     {
