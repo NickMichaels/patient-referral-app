@@ -19,13 +19,13 @@ class Practicioner
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $job_title = null;
+    private ?string $jobTitle = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $specialty = null;
 
     #[ORM\Column(length: 30)]
-    private ?string $license_number = null;
+    private ?string $licenseNumber = null;
 
     /**
      * @var Collection<int, Provider>
@@ -78,12 +78,12 @@ class Practicioner
 
     public function getJobTitle(): ?string
     {
-        return $this->job_title;
+        return $this->jobTitle;
     }
 
-    public function setJobTitle(string $job_title): static
+    public function setJobTitle(string $jobTitle): static
     {
-        $this->job_title = $job_title;
+        $this->jobTitle = $jobTitle;
 
         return $this;
     }
@@ -102,12 +102,12 @@ class Practicioner
 
     public function getLicenseNumber(): ?string
     {
-        return $this->license_number;
+        return $this->licenseNumber;
     }
 
-    public function setLicenseNumber(string $license_number): static
+    public function setLicenseNumber(string $licenseNumber): static
     {
-        $this->license_number = $license_number;
+        $this->licenseNumber = $licenseNumber;
 
         return $this;
     }
