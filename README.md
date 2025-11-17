@@ -60,7 +60,7 @@ chmod -R 777 config/jwt openssl genrsa -out ./config/jwt/private.pem
 openssl rsa -in config/jwt/private.pem -pubout > config/jwt/public.pem
 ```
 
-8. Mod and run the AppFixtures file to create users, providers, practicioners and patients
+8. Mod and run the AppFixtures file to create users, s, practicioners and patients
 
     - In function createUsers, modify the `$user->setEmail(“your_email_here@example.com”)` and `$user->setPassword('your_hashed_pw_here')` to use your own dummy data. you can follow the instruction in the comments to hash your own password using a symfony command.  
 
@@ -218,19 +218,22 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 |---|---|---|
 |token|your_token_here|string|
 
-## Send a Referral
+## Send a Patient Referral
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/providers/{id}/add_practicioner
+>http://127.0.0.1:8000/api/providers/{id}/send_referral
 >```
 ### Body (**raw**)
 
 ```json
 {
-    "practicioner_id": 34,
-    "receiving_provider_id": 2
+    "patient_id": 3,
+    "receiving_provider_id": 6,
+    "sending_practicioner_id":  1,
+    "receiving_practicioner_id": 6
 }
 ```
+_Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional parameters_
 
 ### 🔑 Authentication bearer
 
@@ -260,7 +263,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 |---|---|---|
 |token|your_token_here|string|
 
-## Update a Provider
+## Update a Practicioner
 ### Method: PATCH
 >```
 >http://127.0.0.1:8000/api/practicioners/{id}
@@ -279,7 +282,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 |---|---|---|
 |token|your_token_here|string|
 
-## Delete a Provider
+## Delete a Practicioner
 ### Method: DELETE
 >```
 >http://127.0.0.1:8000/api/practicioners/{id}
@@ -291,7 +294,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 |---|---|---|
 |token|your_token_here|string|
 
-## Create a Provider
+## Create a Practicioner
 ### Method: POST
 >```
 >http://127.0.0.1:8000/api/practicioners
