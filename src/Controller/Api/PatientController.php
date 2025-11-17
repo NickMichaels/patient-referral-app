@@ -20,10 +20,10 @@ final class PatientController extends AbstractController
     {
         $patients = $em->getRepository(Patient::class)->findAll();
 
-        $json_content = $serializer->serialize($patients, "json",[
+        $jsonContent = $serializer->serialize($patients, "json",[
             ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
         ]);
-        return JsonResponse::fromJsonString($json_content);
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
 
@@ -46,13 +46,13 @@ final class PatientController extends AbstractController
         $errors = $validator->validate($patient);
         
         if (count($errors) > 0) {
-            $error_messages = [];
+            $errorMessages = [];
 
             foreach ($errors as $error) {
-                $error_messages[$error->getPropertyPath()][] = $error->getMessage();
+                $errorMessages[$error->getPropertyPath()][] = $error->getMessage();
             }
 
-            return $this->json(["errors" => $error_messages], 422);
+            return $this->json(["errors" => $errorMessages], 422);
         }
 
         $em->persist($patient);

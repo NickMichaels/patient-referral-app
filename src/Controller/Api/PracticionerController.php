@@ -21,10 +21,10 @@ final class PracticionerController extends AbstractController
     {
         $practicioners = $em->getRepository(Practicioner::class)->findAll();
 
-        $json_content = $serializer->serialize($practicioners, "json",[
+        $jsonContent = $serializer->serialize($practicioners, "json",[
             ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
         ]);
-        return JsonResponse::fromJsonString($json_content);
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
 
@@ -47,13 +47,13 @@ final class PracticionerController extends AbstractController
         $errors = $validator->validate($practicioner);
         
         if (count($errors) > 0) {
-            $error_messages = [];
+            $errorMessages = [];
 
             foreach ($errors as $error) {
-                $error_messages[$error->getPropertyPath()][] = $error->getMessage();
+                $errorMessages[$error->getPropertyPath()][] = $error->getMessage();
             }
 
-            return $this->json(["errors" => $error_messages], 422);
+            return $this->json(["errors" => $errorMessages], 422);
         }
 
         $em->persist($practicioner);
