@@ -241,6 +241,28 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
+## Get Sent Referrals (for a Provider)
+### Method: POST
+>```
+>http://127.0.0.1:8000/api/providers/{id}/referrals_sent
+>```
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|your_token_here|string|
+
+## Get Received Referrals (for a Provider)
+### Method: POST
+>```
+>http://127.0.0.1:8000/api/providers/{id}/referrals_received
+>```
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|your_token_here|string|
+
 ## Get All Practicioners
 ### Method: GET
 >```
@@ -312,6 +334,28 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 }
 ```
 
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|your_token_here|string|
+
+## Get Sent Referrals (for a Practicioner)
+### Method: POST
+>```
+>http://127.0.0.1:8000/api/practicioners/{id}/referrals_sent
+>```
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|your_token_here|string|
+
+## Get Received Referrals (for a Practicioner)
+### Method: POST
+>```
+>http://127.0.0.1:8000/api/practicioners/{id}/referrals_received
+>```
 ### 🔑 Authentication bearer
 
 |Param|value|Type|
