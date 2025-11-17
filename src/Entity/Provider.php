@@ -22,10 +22,10 @@ class Provider
     private ?string $specialty = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $address_line1 = null;
+    private ?string $addressLine1 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $address_line2 = null;
+    private ?string $addressLine2 = null;
 
     #[ORM\Column(length: 255)]
     private ?string $city = null;
@@ -98,24 +98,24 @@ class Provider
 
     public function getAddressLine1(): ?string
     {
-        return $this->address_line1;
+        return $this->addressLine1;
     }
 
-    public function setAddressLine1(string $address_line1): static
+    public function setAddressLine1(string $addressLine1): static
     {
-        $this->address_line1 = $address_line1;
+        $this->addressLine1 = $addressLine1;
 
         return $this;
     }
 
     public function getAddressLine2(): ?string
     {
-        return $this->address_line2;
+        return $this->addressLine2;
     }
 
-    public function setAddressLine2(string $address_line2): static
+    public function setAddressLine2(string $addressLine2): static
     {
-        $this->address_line2 = $address_line2;
+        $this->addressLine2 = $addressLine2;
 
         return $this;
     }
