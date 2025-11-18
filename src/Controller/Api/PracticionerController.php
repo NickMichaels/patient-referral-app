@@ -20,7 +20,7 @@ final class PracticionerController extends AbstractController
                           SerializerInterface $serializer): JsonResponse
     {
         $practicioners = $em->getRepository(Practicioner::class)->findAll();
-        
+
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
                 return $object->getId(); // Return the ID instead of the full object
