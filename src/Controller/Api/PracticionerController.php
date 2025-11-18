@@ -6,6 +6,7 @@ use App\Entity\Practicioner;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use App\OptionsResolver\PaginatorOptionsResolver;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -17,17 +18,28 @@ final class PracticionerController extends AbstractController
 {
     #[Route('/api/practicioners', methods: ["GET"])]
     public function index(EntityManagerInterface $em,
-                          SerializerInterface $serializer): JsonResponse
+                          SerializerInterface $serializer,
+                          Request $request,
+                          PaginatorOptionsResolver $paginatorOptionsResolver): JsonResponse
     {
-        $practicioners = $em->getRepository(Practicioner::class)->findAll();
+        try {
+            $queryParams = $paginatorOptionsResolver
+              ->configurePage()
+              ->resolve($request->query->all());
 
-        $context = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
-                return $object->getId(); // Return the ID instead of the full object
-            },
-        ];
-        $jsonContent = $serializer->serialize($practicioners, "json", $context);
-        return JsonResponse::fromJsonString($jsonContent);
+            $practicioners = $em->getRepository(Practicioner::class)->findAllWithPagination($queryParams["page"]);
+
+            $context = [
+                AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                    return $object->getId(); // Return the ID instead of the full object
+                },
+            ];
+            $jsonContent = $serializer->serialize($practicioners, "json", $context);
+
+            return JsonResponse::fromJsonString($jsonContent);
+        } catch (Exception $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
     }
 
 
