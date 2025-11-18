@@ -75,13 +75,13 @@ class Provider
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
+    public function updateCreatedAt(): void
     {
         $this->createdAt = new \DateTime();
     }
 
     #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
+    public function updateUpdatedAt(): void
     {
         $this->updatedAt = new \DateTime();
     }

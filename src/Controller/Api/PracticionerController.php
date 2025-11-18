@@ -20,10 +20,13 @@ final class PracticionerController extends AbstractController
                           SerializerInterface $serializer): JsonResponse
     {
         $practicioners = $em->getRepository(Practicioner::class)->findAll();
-
-        $jsonContent = $serializer->serialize($practicioners, "json",[
-            ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
-        ]);
+        
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($practicioners, "json", $context);
         return JsonResponse::fromJsonString($jsonContent);
     }
 
@@ -75,7 +78,14 @@ final class PracticionerController extends AbstractController
 
         $em->flush();
 
-        return $this->json($practicioner);
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($practicioner, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
     #[Route("/api/practicioners/{id}", methods: ["DELETE"])]
@@ -90,7 +100,7 @@ final class PracticionerController extends AbstractController
     }
 
     #[Route("/api/practicioners/{id}/referrals_sent", methods: ["GET"])]
-    public function get_referrals_sent(EntityManagerInterface $em,
+    public function getReferralsSent(EntityManagerInterface $em,
                                        Practicioner $practicioner,
                                        SerializerInterface $serializer): JsonResponse
     {
@@ -108,7 +118,7 @@ final class PracticionerController extends AbstractController
     }
 
     #[Route("/api/practicioners/{id}/referrals_received", methods: ["GET"])]
-    public function get_referrals_received(EntityManagerInterface $em,
+    public function getReferralsReceived(EntityManagerInterface $em,
                                            Practicioner $practicioner,
                                            SerializerInterface $serializer): JsonResponse
     {
