@@ -111,7 +111,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## API Login (aka get your token here)
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/login_check
+> /api/login_check
 >```
 ### Body (**raw**)
 
@@ -125,7 +125,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Get All Providers
 ### Method: GET
 >```
->http://127.0.0.1:8000/api/providers
+> /api/providers
 >```
 ### 🔑 Authentication bearer
 
@@ -136,7 +136,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Get Provider By Id
 ### Method: GET
 >```
->http://127.0.0.1:8000/api/providers/{id}
+> /api/providers/{id}
 >```
 ### 🔑 Authentication bearer
 
@@ -147,7 +147,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Update a Provider
 ### Method: PATCH
 >```
->http://127.0.0.1:8000/api/providers/{id}
+> /api/providers/{id}
 >```
 ### Body (**raw**)
 
@@ -165,7 +165,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Delete a Provider
 ### Method: DELETE
 >```
->http://127.0.0.1:8000/api/providers/{id}
+> /api/providers/{id}
 >```
 
 ### 🔑 Authentication bearer
@@ -177,7 +177,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Create a Provider
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/providers
+> /api/providers
 >```
 ### Body (**raw**)
 
@@ -202,7 +202,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Add a Practicioner (to a Provider)
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/providers/{id}/add_practicioner
+> /api/providers/{id}/add_practicioner
 >```
 ### Body (**raw**)
 
@@ -221,7 +221,7 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
 ## Send a Patient Referral
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/providers/{id}/send_referral
+> /api/providers/{id}/send_referral
 >```
 ### Body (**raw**)
 
@@ -244,7 +244,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get Sent Referrals (for a Provider)
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/providers/{id}/referrals_sent
+> /api/providers/{id}/referrals_sent
 >```
 ### 🔑 Authentication bearer
 
@@ -255,7 +255,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get Received Referrals (for a Provider)
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/providers/{id}/referrals_received
+> /api/providers/{id}/referrals_received
 >```
 ### 🔑 Authentication bearer
 
@@ -266,7 +266,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get All Practicioners
 ### Method: GET
 >```
->http://127.0.0.1:8000/api/practicioners
+> /api/practicioners
 >```
 ### 🔑 Authentication bearer
 
@@ -277,7 +277,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get One Practicioner By Id
 ### Method: GET
 >```
->http://127.0.0.1:8000/api/practicioners/{id}
+> /api/practicioners/{id}
 >```
 ### 🔑 Authentication bearer
 
@@ -288,7 +288,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Update a Practicioner
 ### Method: PATCH
 >```
->http://127.0.0.1:8000/api/practicioners/{id}
+> /api/practicioners/{id}
 >```
 ### Body (**raw**)
 
@@ -307,7 +307,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Delete a Practicioner
 ### Method: DELETE
 >```
->http://127.0.0.1:8000/api/practicioners/{id}
+> /api/practicioners/{id}
 >```
 
 ### 🔑 Authentication bearer
@@ -319,7 +319,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Create a Practicioner
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/practicioners
+> /api/practicioners
 >```
 ### Body (**raw**)
 
@@ -343,7 +343,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get Sent Referrals (for a Practicioner)
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/practicioners/{id}/referrals_sent
+> /api/practicioners/{id}/referrals_sent
 >```
 ### 🔑 Authentication bearer
 
@@ -354,7 +354,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get Received Referrals (for a Practicioner)
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/practicioners/{id}/referrals_received
+> /api/practicioners/{id}/referrals_received
 >```
 ### 🔑 Authentication bearer
 
@@ -365,7 +365,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get All Patients
 ### Method: GET
 >```
->http://127.0.0.1:8000/api/patients
+> /api/patients
 >```
 ### 🔑 Authentication bearer
 
@@ -376,7 +376,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Get One Patient By Id
 ### Method: GET
 >```
->http://127.0.0.1:8000/api/patients/{id}
+> /api/patients/{id}
 >```
 ### 🔑 Authentication bearer
 
@@ -387,7 +387,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Update a Patient
 ### Method: PATCH
 >```
->http://127.0.0.1:8000/api/patients/{id}
+> /api/patients/{id}
 >```
 ### Body (**raw**)
 
@@ -406,7 +406,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Delete a Patient
 ### Method: DELETE
 >```
->http://127.0.0.1:8000/api/patients/{id}
+> /api/patients/{id}
 >```
 
 ### 🔑 Authentication bearer
@@ -418,7 +418,7 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 ## Create a Patient
 ### Method: POST
 >```
->http://127.0.0.1:8000/api/patients
+> /api/patients
 >```
 ### Body (**raw**)
 
