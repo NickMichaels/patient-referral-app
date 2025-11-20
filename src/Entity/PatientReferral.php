@@ -40,6 +40,11 @@ class PatientReferral implements JsonSerializable
     #[ORM\Column]
     private ?\DateTime $dateSent = null;
 
+    /**
+     * Serialize the Patient Referral
+     *
+     * @return array <string, int|string|null>
+     */
     public function jsonSerialize(): array
     {
         return [

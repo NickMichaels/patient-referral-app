@@ -12,6 +12,9 @@ class Paginator extends DoctrinePaginator
     public const ITEMS_PER_PAGE = 5;
 
     private int $total;
+    /**
+     * @var array<string>
+     */
     private array $data;
     private int $count;
     private int $totalPages;
@@ -29,7 +32,7 @@ class Paginator extends DoctrinePaginator
         $this->page = $page;
 
         try {
-            $this->totalPages = ceil($this->total / self::ITEMS_PER_PAGE);
+            $this->totalPages = intval(ceil($this->total / self::ITEMS_PER_PAGE));
         } catch (\DivisionByZeroError $e) {
             $this->totalPages = 0;
         }
@@ -40,6 +43,11 @@ class Paginator extends DoctrinePaginator
         return $this->total;
     }
 
+    /**
+     * Get data json for the Paginator
+     *
+     * @return array<string>
+     */
     public function getData(): array
     {
         return $this->data;
@@ -88,6 +96,11 @@ class Paginator extends DoctrinePaginator
         return false;
     }
 
+    /**
+     * Return the array iterator
+     *
+     * @return ArrayIterator<string, array<bool|int|string|null>>
+     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator([

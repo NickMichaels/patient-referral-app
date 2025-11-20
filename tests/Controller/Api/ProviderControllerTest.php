@@ -2,14 +2,15 @@
 
 namespace App\Tests\Controller\Api;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 
 class ProviderControllerTest extends WebTestCase
 {
-    private $client;
-    private $jwtEncoder;
-    private $authToken;
+    private KernelBrowser $client;
+    private JWTEncoderInterface $jwtEncoder;
+    private string $authToken;
 
     protected function setUp(): void
     {
