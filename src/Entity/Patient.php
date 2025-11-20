@@ -19,6 +19,9 @@ class Patient
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /**
+     * @var array<string>
+     */
     #[ORM\Column]
     private array $data = [];
 
@@ -74,11 +77,22 @@ class Patient
         return $this;
     }
 
+    /**
+     * Get the data json for the patient
+     *
+     * @return array<string>
+     */
     public function getData(): array
     {
         return $this->data;
     }
 
+    /**
+     * Set the data json for the patient
+     *
+     * @param  array<string> $data
+     * @return static
+     */
     public function setData(array $data): static
     {
         $this->data = $data;
