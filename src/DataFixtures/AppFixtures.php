@@ -35,7 +35,7 @@ class AppFixtures extends Fixture
     {
         // This is just to make an initial ROLE_ADMIN and a ROLE_USER USER 
         $user = new User;
-        $user->setEmail("nick+3@nick.com");
+        $user->setEmail("testuser@example.com");
         $user->setRoles(["ROLE_USER"]);
         // You can run php bin/console security:hash-password
         // and follow the prompts to hash your own pw
@@ -130,7 +130,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        //$this->createUsers($manager);
+        $this->createUsers($manager);
         $this->createProviders($manager);
         $this->createPracticioner($manager);
         $this->createPatients($manager);
