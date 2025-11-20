@@ -15,7 +15,10 @@ class AppFixtures extends Fixture
 
     private \Faker\Generator $faker;
 
-    private array $specialities;
+    /**
+     * @var array<string> $specialties
+     */
+    private array $specialties;
 
     public function __construct() {
         $this->faker = Factory::create();
@@ -31,7 +34,13 @@ class AppFixtures extends Fixture
         ];
     }
 
-    public function createUsers(ObjectManager $manager)
+    /**
+     * Create some users
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function createUsers(ObjectManager $manager): void
     {
         // This is just to make an initial ROLE_ADMIN and a ROLE_USER USER 
         $user = new User;
@@ -53,7 +62,13 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    public function createProviders(ObjectManager $manager)
+    /**
+     * Create some providers
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function createProviders(ObjectManager $manager): void
     {
         for ($i = 0; $i < 10; $i++) {
             $provider = new Provider;
@@ -70,7 +85,13 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    public function createPracticioner(ObjectManager $manager)
+    /**
+     * Create some practicioners
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function createPracticioner(ObjectManager $manager): void
     {
         $jobTitles = [
             'Doctor', 
@@ -103,7 +124,13 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    public function createPatients(ObjectManager $manager)
+    /**
+     * Create some patients
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function createPatients(ObjectManager $manager): void
     {
         for ($i = 0; $i < 10; $i++) {
             $patient = new Patient;

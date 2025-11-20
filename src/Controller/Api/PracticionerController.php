@@ -2,8 +2,10 @@
 
 namespace App\Controller\Api;
 
+use Exception;
 use App\Entity\Practicioner;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\PracticionerRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\OptionsResolver\PaginatorOptionsResolver;
@@ -13,11 +15,12 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class PracticionerController extends AbstractController
 {
     #[Route('/api/practicioners', methods: ["GET"])]
-    public function index(EntityManagerInterface $em,
+    public function index(PracticionerRepository $repository,
                           SerializerInterface $serializer,
                           Request $request,
                           PaginatorOptionsResolver $paginatorOptionsResolver): JsonResponse
@@ -27,7 +30,7 @@ final class PracticionerController extends AbstractController
               ->configurePage()
               ->resolve($request->query->all());
 
-            $practicioners = $em->getRepository(Practicioner::class)->findAllWithPagination($queryParams["page"]);
+            $practicioners = $repository->findAllWithPagination($queryParams["page"]);
 
             $context = [
                 AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {

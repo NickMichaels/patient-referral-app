@@ -13,6 +13,11 @@ class ProviderCache
     {
     }
 
+    /**
+     * Final all providers in the system using the cache
+     *
+     * @return ?array<Provider>
+     */
     public function findAll(): ?array
     {
         $key = sprintf("find-all-providers-%d", time());
