@@ -22,7 +22,7 @@ class ProviderCache
     {
         $key = sprintf("find-all-providers-%d", time());
 
-        return $this->cache->get($key, function(ItemInterface $item) {
+        return $this->cache->get($key, function (ItemInterface $item) {
 
             $item->expiresAfter(3600);
 

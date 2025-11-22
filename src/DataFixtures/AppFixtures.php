@@ -12,7 +12,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {
-
     private \Faker\Generator $faker;
 
     /**
@@ -20,7 +19,8 @@ class AppFixtures extends Fixture
      */
     private array $specialties;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->faker = Factory::create();
 
         $this->specialties = [
@@ -42,8 +42,8 @@ class AppFixtures extends Fixture
      */
     public function createUsers(ObjectManager $manager): void
     {
-        // This is just to make an initial ROLE_ADMIN and a ROLE_USER USER 
-        $user = new User;
+        // This is just to make an initial ROLE_ADMIN and a ROLE_USER USER
+        $user = new User();
         $user->setEmail("testuser@example.com");
         $user->setRoles(["ROLE_USER"]);
         // You can run php bin/console security:hash-password
@@ -51,9 +51,9 @@ class AppFixtures extends Fixture
         $user->setPassword('$2y$13$LLqUUzwjwDFgRF5FFfNtIeMVmD6WEFiCVcojdKaN4tOYTHKCT1xTC');
         $manager->persist($user);
 
-        $user = new User;
+        $user = new User();
         // $user->setEmail("your_email_here@example.com");
-        $user->setEmail("nick+4@nick.com");
+        $user->setEmail("nick+7@nick.com");
         $user->setRoles(["ROLE_USER"]);
         //$user->setPassword('your_hashed_pw_here');
         $user->setPassword('$2y$13$LLqUUzwjwDFgRF5FFfNtIeMVmD6WEFiCVcojdKaN4tOYTHKCT1xTC');
@@ -71,7 +71,7 @@ class AppFixtures extends Fixture
     public function createProviders(ObjectManager $manager): void
     {
         for ($i = 0; $i < 10; $i++) {
-            $provider = new Provider;
+            $provider = new Provider();
             $provider->setName($this->faker->company);
             $provider->setAddressLine1($this->faker->streetAddress);
             $provider->setCity($this->faker->city);
@@ -94,7 +94,7 @@ class AppFixtures extends Fixture
     public function createPracticioner(ObjectManager $manager): void
     {
         $jobTitles = [
-            'Doctor', 
+            'Doctor',
             'Registered Nurse',
             'Licensed Practical Nurse',
             'Physical Therapist',
@@ -105,8 +105,8 @@ class AppFixtures extends Fixture
             'Dietitian',
         ];
         for ($i = 0; $i < 10; $i++) {
-            $practicioner = new Practicioner;
-        
+            $practicioner = new Practicioner();
+
             $practicioner->setName($this->faker->firstname . " "  . $this->faker->lastName);
             $jobTitle = $jobTitles[array_rand($jobTitles)];
             $practicioner->setJobTitle($jobTitle);
@@ -133,12 +133,12 @@ class AppFixtures extends Fixture
     public function createPatients(ObjectManager $manager): void
     {
         for ($i = 0; $i < 10; $i++) {
-            $patient = new Patient;
-        
+            $patient = new Patient();
+
             $patient->setName($this->faker->firstname . " "  . $this->faker->lastName);
 
             // Defining this as json allows us to add ot this later
-            // and as this is supposed to a small project I dont want 
+            // and as this is supposed to a small project I dont want
             // to get too much in the weeds on details
             $patientData = [
                 'accountNumber' => $this->faker->randomNumber(8),

@@ -90,7 +90,7 @@ class Paginator extends DoctrinePaginator
     public function hasPreviousPage(): bool
     {
         if ($this->getCurrentPage() > 1 && $this->getCurrentPage() <= $this->getTotalPages()) {
-        return true;
+            return true;
         }
 
         return false;

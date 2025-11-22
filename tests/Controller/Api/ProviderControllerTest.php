@@ -26,7 +26,7 @@ class ProviderControllerTest extends WebTestCase
     public function testSomething(): void
     {
         $crawler = $this->client->request(
-            'GET', 
+            'GET',
             '/api/providers',
             [],
             [],
