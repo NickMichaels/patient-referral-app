@@ -15,14 +15,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class PatientController extends AbstractController
 {
     #[Route('/api/patients', methods: ["GET"])]
-    public function index(EntityManagerInterface $em,
-                          SerializerInterface $serializer): JsonResponse
-    {
+    public function index(
+        EntityManagerInterface $em,
+        SerializerInterface $serializer
+    ): JsonResponse {
         $patients = $em->getRepository(Patient::class)->findAll();
 
-        $jsonContent = $serializer->serialize($patients, "json",[
-            ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
-        ]);
+        $jsonContent = $serializer->serialize(
+            $patients,
+            "json",
+            [
+                ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
+            ]
+        );
         return JsonResponse::fromJsonString($jsonContent);
     }
 
@@ -34,17 +39,18 @@ final class PatientController extends AbstractController
     }
 
     #[Route("/api/patients", methods: ["POST"])]
-    public function create(Request $request,
-                           SerializerInterface $serializer,
-                           EntityManagerInterface $em,
-                           ValidatorInterface $validator): JsonResponse
-    {
+    public function create(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $em,
+        ValidatorInterface $validator
+    ): JsonResponse {
         $content = $request->getContent();
 
         $patient = $serializer->deserialize($content, Patient::class, "json");
 
         $errors = $validator->validate($patient);
-        
+
         if (count($errors) > 0) {
             $errorMessages = [];
 
@@ -62,15 +68,18 @@ final class PatientController extends AbstractController
     }
 
     #[Route("/api/patients/{id}", methods: ["PUT", "PATCH"])]
-    public function update(Request $request,
-                           Patient $patient,
-                           SerializerInterface $serializer,
-                           EntityManagerInterface $em): JsonResponse
-    {
-        $serializer->deserialize($request->getContent(),
-                                 Patient::class,
-                                 "json",
-                                ["object_to_populate" => $patient]);
+    public function update(
+        Request $request,
+        Patient $patient,
+        SerializerInterface $serializer,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $serializer->deserialize(
+            $request->getContent(),
+            Patient::class,
+            "json",
+            ["object_to_populate" => $patient]
+        );
 
         $em->flush();
 
@@ -78,9 +87,10 @@ final class PatientController extends AbstractController
     }
 
     #[Route("/api/patients/{id}", methods: ["DELETE"])]
-    public function delete(EntityManagerInterface $em,
-                           Patient $patient): JsonResponse
-    {
+    public function delete(
+        EntityManagerInterface $em,
+        Patient $patient
+    ): JsonResponse {
         $em->remove($patient);
 
         $em->flush();
