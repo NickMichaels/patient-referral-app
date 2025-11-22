@@ -86,6 +86,7 @@
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^12.4",
+        "squizlabs/php_codesniffer": "*",
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",
         "symfony/maker-bundle": "^1.64"
