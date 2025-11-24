@@ -20,11 +20,12 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 final class PracticionerController extends AbstractController
 {
     #[Route('/api/practicioners', methods: ["GET"])]
-    public function index(PracticionerRepository $repository,
-                          SerializerInterface $serializer,
-                          Request $request,
-                          PaginatorOptionsResolver $paginatorOptionsResolver): JsonResponse
-    {
+    public function index(
+        PracticionerRepository $repository,
+        SerializerInterface $serializer,
+        Request $request,
+        PaginatorOptionsResolver $paginatorOptionsResolver
+    ): JsonResponse {
         try {
             $queryParams = $paginatorOptionsResolver
               ->configurePage()
@@ -53,17 +54,17 @@ final class PracticionerController extends AbstractController
     }
 
     #[Route("/api/practicioners", methods: ["POST"])]
-    public function create(Request $request,
-                           SerializerInterface $serializer,
-                           EntityManagerInterface $em,
-                           ValidatorInterface $validator): JsonResponse
-    {
+    public function create(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $em,
+        ValidatorInterface $validator
+    ): JsonResponse {
         $content = $request->getContent();
 
         $practicioner = $serializer->deserialize($content, Practicioner::class, "json");
 
         $errors = $validator->validate($practicioner);
-        
         if (count($errors) > 0) {
             $errorMessages = [];
 
@@ -81,15 +82,18 @@ final class PracticionerController extends AbstractController
     }
 
     #[Route("/api/practicioners/{id}", methods: ["PUT", "PATCH"])]
-    public function update(Request $request,
-                           Practicioner $practicioner,
-                           SerializerInterface $serializer,
-                           EntityManagerInterface $em): JsonResponse
-    {
-        $serializer->deserialize($request->getContent(),
-                                 Practicioner::class,
-                                 "json",
-                                ["object_to_populate" => $practicioner]);
+    public function update(
+        Request $request,
+        Practicioner $practicioner,
+        SerializerInterface $serializer,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $serializer->deserialize(
+            $request->getContent(),
+            Practicioner::class,
+            "json",
+            ["object_to_populate" => $practicioner]
+        );
 
         $em->flush();
 
@@ -104,9 +108,10 @@ final class PracticionerController extends AbstractController
     }
 
     #[Route("/api/practicioners/{id}", methods: ["DELETE"])]
-    public function delete(EntityManagerInterface $em,
-                           Practicioner $practicioner): JsonResponse
-    {
+    public function delete(
+        EntityManagerInterface $em,
+        Practicioner $practicioner
+    ): JsonResponse {
         $em->remove($practicioner);
 
         $em->flush();
@@ -115,10 +120,11 @@ final class PracticionerController extends AbstractController
     }
 
     #[Route("/api/practicioners/{id}/referrals_sent", methods: ["GET"])]
-    public function getReferralsSent(EntityManagerInterface $em,
-                                       Practicioner $practicioner,
-                                       SerializerInterface $serializer): JsonResponse
-    {
+    public function getReferralsSent(
+        EntityManagerInterface $em,
+        Practicioner $practicioner,
+        SerializerInterface $serializer
+    ): JsonResponse {
         $referralsSent = $practicioner->getPatientReferralsSent();
 
         $context = [
@@ -129,14 +135,14 @@ final class PracticionerController extends AbstractController
         $jsonContent = $serializer->serialize($referralsSent, 'json', $context);
 
         return JsonResponse::fromJsonString($jsonContent);
-
     }
 
     #[Route("/api/practicioners/{id}/referrals_received", methods: ["GET"])]
-    public function getReferralsReceived(EntityManagerInterface $em,
-                                           Practicioner $practicioner,
-                                           SerializerInterface $serializer): JsonResponse
-    {
+    public function getReferralsReceived(
+        EntityManagerInterface $em,
+        Practicioner $practicioner,
+        SerializerInterface $serializer
+    ): JsonResponse {
         $referralsReceived = $practicioner->getPatientReferralsReceived();
 
         $context = [
@@ -147,6 +153,5 @@ final class PracticionerController extends AbstractController
         $jsonContent = $serializer->serialize($referralsReceived, 'json', $context);
 
         return JsonResponse::fromJsonString($jsonContent);
-
     }
 }
