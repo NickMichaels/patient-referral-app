@@ -58,11 +58,18 @@ class Practicioner
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
+    /**
+     * @var Collection<int, PracticionerSchedule>
+     */
+    #[ORM\OneToMany(targetEntity: PracticionerSchedule::class, mappedBy: 'practicioner')]
+    private Collection $practicionerSchedules;
+
     public function __construct()
     {
         $this->provider = new ArrayCollection();
         $this->patientReferralsSent = new ArrayCollection();
         $this->patientReferralsReceived = new ArrayCollection();
+        $this->practicionerSchedules = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -258,6 +265,36 @@ class Practicioner
     public function setUpdatedAt(?\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PracticionerSchedule>
+     */
+    public function getPracticionerSchedules(): Collection
+    {
+        return $this->practicionerSchedules;
+    }
+
+    public function addPracticionerSchedule(PracticionerSchedule $practicionerSchedule): static
+    {
+        if (!$this->practicionerSchedules->contains($practicionerSchedule)) {
+            $this->practicionerSchedules->add($practicionerSchedule);
+            $practicionerSchedule->setPracticioner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePracticionerSchedule(PracticionerSchedule $practicionerSchedule): static
+    {
+        if ($this->practicionerSchedules->removeElement($practicionerSchedule)) {
+            // set the owning side to null (unless already changed)
+            if ($practicionerSchedule->getPracticioner() === $this) {
+                $practicionerSchedule->setPracticioner(null);
+            }
+        }
 
         return $this;
     }
