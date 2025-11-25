@@ -67,11 +67,18 @@ class Provider
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
+    /**
+     * @var Collection<int, Appointment>
+     */
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'provider')]
+    private Collection $appointments;
+
     public function __construct()
     {
         $this->practicioners = new ArrayCollection();
         $this->patientReferralsSent = new ArrayCollection();
         $this->patientReferralsReceived = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -306,6 +313,36 @@ class Provider
     public function setUpdatedAt(?\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
+            $appointment->setProvider($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getProvider() === $this) {
+                $appointment->setProvider(null);
+            }
+        }
 
         return $this;
     }

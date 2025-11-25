@@ -64,12 +64,19 @@ class Practicioner
     #[ORM\OneToMany(targetEntity: PracticionerSchedule::class, mappedBy: 'practicioner')]
     private Collection $practicionerSchedules;
 
+    /**
+     * @var Collection<int, Appointment>
+     */
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'practicioner')]
+    private Collection $appointments;
+
     public function __construct()
     {
         $this->provider = new ArrayCollection();
         $this->patientReferralsSent = new ArrayCollection();
         $this->patientReferralsReceived = new ArrayCollection();
         $this->practicionerSchedules = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -293,6 +300,36 @@ class Practicioner
             // set the owning side to null (unless already changed)
             if ($practicionerSchedule->getPracticioner() === $this) {
                 $practicionerSchedule->setPracticioner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
+            $appointment->setPracticioner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getPracticioner() === $this) {
+                $appointment->setPracticioner(null);
             }
         }
 
