@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\AppointmentStatus;
 use App\Repository\AppointmentRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
@@ -34,6 +35,15 @@ class Appointment
 
     #[ORM\Column(enumType: AppointmentStatus::class)]
     private ?AppointmentStatus $status = null;
+
+    #[ORM\ManyToOne(inversedBy: 'appointments')]
+    private ?PatientReferral $patientReferral = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $cancellation_reason = null;
 
     public function getId(): ?int
     {
@@ -108,6 +118,42 @@ class Appointment
     public function setStatus(AppointmentStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPatientReferral(): ?PatientReferral
+    {
+        return $this->patientReferral;
+    }
+
+    public function setPatientReferral(?PatientReferral $patientReferral): static
+    {
+        $this->patientReferral = $patientReferral;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCancellationReason(): ?string
+    {
+        return $this->cancellation_reason;
+    }
+
+    public function setCancellationReason(?string $cancellation_reason): static
+    {
+        $this->cancellation_reason = $cancellation_reason;
 
         return $this;
     }
