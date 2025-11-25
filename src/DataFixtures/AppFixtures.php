@@ -2,11 +2,14 @@
 
 namespace App\DataFixtures;
 
+use DateTime;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Patient;
 use App\Entity\Provider;
 use App\Entity\Practicioner;
+use App\Enum\ScheduleDayOfWeek;
+use App\Entity\PracticionerSchedule;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -125,6 +128,42 @@ class AppFixtures extends Fixture
     }
 
     /**
+     * Create some practicioner schedules
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function createPracticionerSchedules(ObjectManager $manager): void
+    {
+        $dow = ScheduleDayOfWeek::cases();
+        $repository = $manager->getRepository(Practicioner::class);
+
+        // find five practicioners
+        for ($i = 1; $i < 6; $i++) {
+            $practicioner = $repository->findOneBy(['id' => $i]);
+            if ($practicioner instanceof Practicioner) {
+                foreach ($dow as $day) {
+                    $schedule = new PracticionerSchedule();
+                    $schedule->setPracticioner($practicioner);
+                    $start = DateTime::createFromFormat('H:i:s', '08:30:00');
+                    $end = DateTime::createFromFormat('H:i:s', '16:30:00');
+                    $schedule->setShiftStart($start);
+                    $schedule->setShiftEnd($end);
+                    $schedule->setDayOfWeek($day);
+                    $manager->persist($schedule);
+                }
+            } else {
+                continue;
+            }
+
+            $manager->flush();
+        }
+
+        $repository = $manager->getRepository(Practicioner::class);
+        $practicioner = $repository->findOneBy(['id' => $i]);
+    }
+
+    /**
      * Create some patients
      *
      * @param  ObjectManager $manager
@@ -161,5 +200,6 @@ class AppFixtures extends Fixture
         $this->createProviders($manager);
         $this->createPracticioner($manager);
         $this->createPatients($manager);
+        $this->createPracticionerSchedules($manager);
     }
 }
