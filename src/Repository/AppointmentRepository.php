@@ -16,6 +16,40 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
+    /**
+     * Returns an array of appointments that are already booked
+     * for a given practicioner
+     *
+     * @param  int    $practId
+     * @param  string $startTime
+     * @param  string $endTime
+     * @return array
+     */
+    public function findPracticionerAppointments($practId, $startTime, $endTime): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT COUNT(*) AS appointment_no
+            FROM appointment a
+            WHERE a.practicioner_id = :pid
+            AND a.start_time >= :start_time
+            AND a.end_time <= :end_time
+            ORDER BY a.id ASC
+        ';
+
+        $resultSet = $conn->executeQuery(
+            $sql,
+            [
+                'pid' => $practId,
+                'start_time' => $startTime,
+                'end_time' => $endTime,
+            ]
+        );
+
+        return $resultSet->fetchAllAssociative();
+    }
+
     //    /**
     //     * @return Appointment[] Returns an array of Appointment objects
     //     */

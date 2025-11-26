@@ -5,13 +5,17 @@ namespace App\Controller\Api;
 use DateTime;
 use App\Entity\Patient;
 use App\Entity\Provider;
+use App\Entity\Appointment;
 use App\Cache\ProviderCache;
 use App\Entity\Practicioner;
 use App\Entity\PatientReferral;
+use App\Enum\AppointmentStatus;
 use App\Enum\PatientReferralStatus;
+use App\Entity\PracticionerSchedule;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\PracticionerScheduleRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -206,6 +210,115 @@ final class ProviderController extends AbstractController
         $em->persist($patientReferral);
         $em->flush();
         return $this->json("Patient referral sent", 200);
+    }
+
+    #[Route("/api/providers/{id}/schedule_patient", methods: ["POST"])]
+    public function schedulePatient(
+        Request $request,
+        EntityManagerInterface $em,
+        Provider $provider
+    ): JsonResponse {
+        $content = $request->getContent();
+        $json = json_decode($content);
+
+        // If the patient_id isnt set, we can infer it from the patient_referral_id
+        if (!property_exists($json, 'patient_id')) {
+            if (property_exists($json, 'patient_referral_id')) {
+                $referral = $em->getRepository(PatientReferral::class)->findOneBy(
+                    ['id' => $json->patient_referral_id]
+                );
+                $patient = $referral->getPatient();
+
+                if (!$patient instanceof Patient) {
+                    return $this->json("Patient does not exist", 404);
+                }
+            } else {
+                // If neither patient nor patient referral are set, then we cant schedule
+                return $this->json("No patient_id or patient_referral_id sent in request", 404);
+            }
+        } else {
+            $patient = $em->getRepository(Patient::class)->findOneBy(
+                ['id' => $json->patient_id]
+            );
+            if (!$patient instanceof Patient) {
+                return $this->json("Patient does not exist", 404);
+            }
+            // However the patient id set should match the patient id in the patient referral
+            if (property_exists($json, 'patient_referral_id')) {
+                $referral = $em->getRepository(PatientReferral::class)->findOneBy(
+                    ['id' => $json->patient_referral_id]
+                );
+                $ref_patient_id = $referral->getPatient()->getId();
+
+                if ($json->patient_id !== $ref_patient_id) {
+                    return $this->json("Patient passed and patient referral passed do not match", 404);
+                }
+            }
+        }
+
+        $practicioner = $em->getRepository(Practicioner::class)->findOneBy(
+            ['id' => $json->practicioner_id]
+        );
+
+        if (!$practicioner instanceof Practicioner) {
+            return $this->json("Practicioner does not exist", 404);
+        }
+
+        // Check and see if the requested times fall with the practicioners schedule
+        $practId = $json->practicioner_id;
+        // Now we need to parse the times
+        $startDate = new DateTime($json->start_time);
+        $endDate = new DateTime($json->end_time);
+        $dayOfWeek = $startDate->format('l');
+        $startTime = $startDate->format('H:i');
+        $endTime = $endDate->format('H:i');
+
+        // For the sake of simplicity, lets assume that start and end
+        // times are always going to be on the same day
+        $onSchedule = $em->getRepository(PracticionerSchedule::class)
+            ->findByPracticionerId(
+                $practId,
+                $startTime,
+                $endTime
+            );
+
+        if (empty($onSchedule)) {
+            // Technically they aren't scheduled but we dont need to share that
+            return $this->json("Practicioner is not available at the requested times", 404);
+        }
+
+        // Check and see if the practicioner already has something scheduled
+        $appts = $em->getRepository(Appointment::class)
+            ->findPracticionerAppointments(
+                $practId,
+                $startDate->format('Y-m-d h:i:s'),
+                $endDate->format('Y-m-d h:i:s'),
+            );
+
+        if ($appts[0]['appointment_no'] > 0) {
+            return $this->json("Practicioner is not available at the requested times", 404);
+        }
+
+        // Ok now we can create the appointment
+        $appointment = new Appointment();
+        $appointment->setPatient($patient);
+        $appointment->setProvider($provider);
+        $appointment->setPracticioner($practicioner);
+        $appointment->setStartTime($startDate);
+        $appointment->setEndTime($endDate);
+        $appointment->setStatus(AppointmentStatus::Scheduled);
+
+        if (property_exists($json, 'description')) {
+            $appointment->setDescription($json->description);
+        }
+
+        if (property_exists($json, 'cancellation_reason')) {
+            $appointment->setCancellationReason($json->cancellation_reason);
+        }
+
+        $em->persist($appointment);
+        $em->flush();
+        return $this->json("Patient scheduled", 200);
     }
 
     #[Route("/api/providers/{id}/referrals_sent", methods: ["GET"])]
