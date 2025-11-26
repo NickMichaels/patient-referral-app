@@ -291,8 +291,8 @@ final class ProviderController extends AbstractController
         $appts = $em->getRepository(Appointment::class)
             ->findPracticionerAppointments(
                 $practId,
-                $startDate->format('Y-m-d h:i:s'),
-                $endDate->format('Y-m-d h:i:s'),
+                $startDate->format('Y-m-d H:i:s'),
+                $endDate->format('Y-m-d H:i:s'),
             );
 
         if ($appts[0]['appointment_no'] > 0) {

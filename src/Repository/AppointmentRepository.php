@@ -33,8 +33,8 @@ class AppointmentRepository extends ServiceEntityRepository
             SELECT COUNT(*) AS appointment_no
             FROM appointment a
             WHERE a.practicioner_id = :pid
-            AND a.start_time >= :start_time
-            AND a.end_time <= :end_time
+            AND a.start_time < :end_time
+            AND a.end_time > :start_time
             ORDER BY a.id ASC
         ';
 
