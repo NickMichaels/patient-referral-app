@@ -23,10 +23,13 @@ class PracticionerScheduleRepository extends ServiceEntityRepository
      * @param  int    $practId
      * @param  string $startTime
      * @param  string $endTime
-     * @return array
+     * @return array<mixed>
      */
-    public function findByPracticionerId($practId, $startTime, $endTime): array
-    {
+    public function findByPracticionerId(
+        int $practId,
+        string $startTime,
+        string $endTime
+    ): array {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '

@@ -343,7 +343,7 @@ final class ProviderController extends AbstractController
     public function getReferralsReceived(
         EntityManagerInterface $em,
         Provider $provider,
-        SerializerInterface $serialize
+        SerializerInterface $serializer
     ): JsonResponse {
         $referralsReceived = $provider->getPatientReferralsReceived();
 
