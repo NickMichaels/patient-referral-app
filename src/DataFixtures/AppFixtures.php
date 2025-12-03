@@ -56,7 +56,7 @@ class AppFixtures extends Fixture
 
         $user = new User();
         // $user->setEmail("your_email_here@example.com");
-        $user->setEmail("nick+7@nick.com");
+        $user->setEmail("nick+1@nick.com");
         $user->setRoles(["ROLE_USER"]);
         //$user->setPassword('your_hashed_pw_here');
         $user->setPassword('$2y$13$LLqUUzwjwDFgRF5FFfNtIeMVmD6WEFiCVcojdKaN4tOYTHKCT1xTC');
