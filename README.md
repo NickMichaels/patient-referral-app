@@ -56,7 +56,8 @@ php bin/console doctrine:migrations:migrate
 
 ```
 mkdir config/jwt
-chmod -R 777 config/jwt openssl genrsa -out ./config/jwt/private.pem
+chmod -R 777 config/jwt
+openssl genrsa -out ./config/jwt/private.pem
 openssl rsa -in config/jwt/private.pem -pubout > config/jwt/public.pem
 ```
 
