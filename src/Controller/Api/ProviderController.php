@@ -321,6 +321,24 @@ final class ProviderController extends AbstractController
         return $this->json("Patient scheduled", 200);
     }
 
+    #[Route("/api/providers/{id}/practicioners", methods: ["GET"])]
+    public function getAssociatedPracticioners(
+        EntityManagerInterface $em,
+        Provider $provider,
+        SerializerInterface $serializer
+    ): JsonResponse {
+        $practicioners = $provider->getPracticioners();
+
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($practicioners, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
+    }
+
     #[Route("/api/providers/{id}/referrals_sent", methods: ["GET"])]
     public function getReferralsSent(
         EntityManagerInterface $em,
