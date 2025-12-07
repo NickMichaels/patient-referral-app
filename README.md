@@ -1,5 +1,5 @@
 # patient-referal-app
-A REST API linking patients to healthcare providers
+A Symfony REST API linking patients to healthcare providers
 
 ## Initial stories / requirements
 * As an admin, I want to be able to create, update and delete provider (PCP, clinic, hospital. specialist, etc.) records :white_check_mark:
