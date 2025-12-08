@@ -33,9 +33,18 @@ final class PatientController extends AbstractController
 
 
     #[Route("/api/patients/{id}", methods: ["GET"])]
-    public function show(Patient $patient): JsonResponse
-    {
-        return $this->json($patient);
+    public function show(
+        Patient $patient,
+        SerializerInterface $serializer
+    ): JsonResponse {
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($patient, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
     #[Route("/api/patients", methods: ["POST"])]
