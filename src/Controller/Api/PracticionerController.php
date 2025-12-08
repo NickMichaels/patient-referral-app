@@ -48,9 +48,18 @@ final class PracticionerController extends AbstractController
 
 
     #[Route("/api/practicioners/{id}", methods: ["GET"])]
-    public function show(Practicioner $practicioner): JsonResponse
-    {
-        return $this->json($practicioner);
+    public function show(
+        Practicioner $practicioner,
+        SerializerInterface $serializer
+    ): JsonResponse {
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($practicioner, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
     #[Route("/api/practicioners", methods: ["POST"])]
