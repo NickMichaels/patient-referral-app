@@ -22,13 +22,14 @@ final class PatientController extends AbstractController
     ): JsonResponse {
         $patients = $em->getRepository(Patient::class)->findAll();
 
-        $jsonContent = $serializer->serialize(
-            $patients,
-            "json",
-            [
-                ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
-            ]
-        );
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+            ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
+        ];
+        $jsonContent = $serializer->serialize($patients, 'json', $context);
+
         return JsonResponse::fromJsonString($jsonContent);
     }
 
