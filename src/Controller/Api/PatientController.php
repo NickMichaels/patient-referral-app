@@ -25,8 +25,7 @@ final class PatientController extends AbstractController
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
                 return $object->getId(); // Return the ID instead of the full object
-            },
-            ObjectNormalizer::IGNORED_ATTRIBUTES => ["id"]
+            }
         ];
         $jsonContent = $serializer->serialize($patients, 'json', $context);
 
