@@ -3,6 +3,9 @@
 namespace App\Controller\Api;
 
 use App\Entity\PatientReferral;
+use App\Entity\Patient;
+use App\Entity\Practicioner;
+use App\Entity\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -45,9 +48,40 @@ final class PatientReferralController extends AbstractController
             ["object_to_populate" => $patientReferral]
         );
 
+        $data = json_decode($request->getContent(), true);
+        $fkMap = [
+            'patient_id' => "App\Entity\Patient",
+            'sending_provider_id' => "App\Entity\Provider",
+            'receiving_provider_id' => "App\Entity\Provider",
+            'sending_practicioner_id' => "App\Entity\Practicioner",
+            'receiving_practicioner_id' => "App\Entity\Practicioner",
+        ];
+
+        foreach ($fkMap as $field => $className) {
+            if (isset($data[$field])) {
+                $fkEntityId = $data[$field];
+                $fkEntity = $em->getRepository($className)->find($fkEntityId);
+                if (!$fkEntity) {
+                    continue;
+                }
+
+                $fncName = 'set' . str_replace('Id','', str_replace(' ', '', ucwords(str_replace('_', ' ', $field))));
+
+                $patientReferral->$fncName($fkEntity);
+
+            }
+        }
+
         $em->flush();
 
-        return $this->json($patientReferral);
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($patientReferral, 'json', $context);
+
+        return JsonResponse::fromJsonString($jsonContent);
     }
 
     #[Route("/api/patientreferrals/{id}", methods: ["DELETE"])]
