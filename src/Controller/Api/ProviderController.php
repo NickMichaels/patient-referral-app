@@ -151,6 +151,31 @@ final class ProviderController extends AbstractController
         return $this->json("Practicioner added to provider", 200);
     }
 
+    #[Route("/api/providers/{id}/remove_practicioner", methods: ["POST"])]
+    public function removePracticioner(
+        Request $request,
+        EntityManagerInterface $em,
+        Provider $provider
+    ): JsonResponse {
+        $content = $request->getContent();
+        $json = json_decode($content);
+
+        if (!property_exists($json, 'practicioner_id')) {
+            return $this->json("No practicioner id passed in request", 404);
+        }
+        $practicioner = $em->getRepository(Practicioner::class)->findOneBy(
+            ['id' => $json->practicioner_id]
+        );
+
+        if (!$practicioner instanceof Practicioner) {
+            return $this->json("Practicioner does not exist", 404);
+        }
+
+        $provider->removePracticioner($practicioner);
+        $em->flush();
+        return $this->json("Practicioner removed from provider", 200);
+    }
+
     #[Route("/api/providers/{id}/send_referral", methods: ["POST"])]
     public function sendPatientReferral(
         Request $request,

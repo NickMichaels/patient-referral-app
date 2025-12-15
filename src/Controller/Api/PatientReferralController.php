@@ -64,7 +64,7 @@ final class PatientReferralController extends AbstractController
                 if (!$fkEntity) {
                     continue;
                 }
-
+                // this converts snakeCase to camelCase, and gets rid of 'id' from each field
                 $fncName = 'set' . str_replace('Id','', str_replace(' ', '', ucwords(str_replace('_', ' ', $field))));
 
                 $patientReferral->$fncName($fkEntity);
