@@ -6,10 +6,11 @@ use App\Repository\PracticionerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PracticionerRepository::class)]
-class Practicioner
+class Practicioner implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -77,6 +78,24 @@ class Practicioner
         $this->patientReferralsReceived = new ArrayCollection();
         $this->practicionerSchedules = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+    }
+
+    /**
+     * Serialize the Practitioner
+     *
+     * @return array <string, int|string|null>
+     */
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'jobTitle' => $this->getJobTitle(),
+            'specialty' => $this->getSpecialty(),
+            'licenseNumber' => $this->getLicenseNumber(),
+            'phone' => $this->getPhone(),
+            'email' => $this->getEmail()
+        ];
     }
 
     #[ORM\PrePersist]

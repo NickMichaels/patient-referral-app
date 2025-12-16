@@ -83,7 +83,7 @@ class Provider implements JsonSerializable
     }
 
     /**
-     * Serialize the Patient Referral
+     * Serialize the Provider
      *
      * @return array <string, int|string|null>
      */
