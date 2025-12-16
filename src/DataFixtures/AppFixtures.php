@@ -7,9 +7,9 @@ use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Patient;
 use App\Entity\Provider;
-use App\Entity\Practicioner;
+use App\Entity\Practitioner;
 use App\Enum\ScheduleDayOfWeek;
-use App\Entity\PracticionerSchedule;
+use App\Entity\PractitionerSchedule;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -89,12 +89,12 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * Create some practicioners
+     * Create some practitioners
      *
      * @param  ObjectManager $manager
      * @return void
      */
-    public function createPracticioner(ObjectManager $manager): void
+    public function createPractitioner(ObjectManager $manager): void
     {
         $jobTitles = [
             'Doctor',
@@ -108,43 +108,43 @@ class AppFixtures extends Fixture
             'Dietitian',
         ];
         for ($i = 0; $i < 10; $i++) {
-            $practicioner = new Practicioner();
+            $practitioner = new Practitioner();
 
-            $practicioner->setName($this->faker->firstname . " "  . $this->faker->lastName);
+            $practitioner->setName($this->faker->firstname . " "  . $this->faker->lastName);
             $jobTitle = $jobTitles[array_rand($jobTitles)];
-            $practicioner->setJobTitle($jobTitle);
+            $practitioner->setJobTitle($jobTitle);
             // If we have a doctor, set a specialty
             if ($jobTitle == 'Doctor') {
-                $practicioner->setSpecialty($this->specialties[array_rand($this->specialties)]);
+                $practitioner->setSpecialty($this->specialties[array_rand($this->specialties)]);
             }
-            $practicioner->setLicenseNumber($this->faker->randomNumber);
-            $practicioner->setEmail($this->faker->email);
-            $practicioner->setPhone($this->faker->phoneNumber);
+            $practitioner->setLicenseNumber($this->faker->randomNumber);
+            $practitioner->setEmail($this->faker->email);
+            $practitioner->setPhone($this->faker->phoneNumber);
 
-            $manager->persist($practicioner);
+            $manager->persist($practitioner);
         }
 
         $manager->flush();
     }
 
     /**
-     * Create some practicioner schedules
+     * Create some practitioner schedules
      *
      * @param  ObjectManager $manager
      * @return void
      */
-    public function createPracticionerSchedules(ObjectManager $manager): void
+    public function createPractitionerSchedules(ObjectManager $manager): void
     {
         $dow = ScheduleDayOfWeek::cases();
-        $repository = $manager->getRepository(Practicioner::class);
+        $repository = $manager->getRepository(Practitioner::class);
 
-        // find five practicioners
+        // find five practitioners
         for ($i = 1; $i < 6; $i++) {
-            $practicioner = $repository->findOneBy(['id' => $i]);
-            if ($practicioner instanceof Practicioner) {
+            $practitioner = $repository->findOneBy(['id' => $i]);
+            if ($practitioner instanceof Practitioner) {
                 foreach ($dow as $day) {
-                    $schedule = new PracticionerSchedule();
-                    $schedule->setPracticioner($practicioner);
+                    $schedule = new PractitionerSchedule();
+                    $schedule->setPractitioner($practitioner);
                     $start = DateTime::createFromFormat('H:i:s', '08:30:00');
                     $end = DateTime::createFromFormat('H:i:s', '16:30:00');
                     $schedule->setShiftStart($start);
@@ -159,8 +159,8 @@ class AppFixtures extends Fixture
             $manager->flush();
         }
 
-        $repository = $manager->getRepository(Practicioner::class);
-        $practicioner = $repository->findOneBy(['id' => $i]);
+        $repository = $manager->getRepository(Practitioner::class);
+        $practitioner = $repository->findOneBy(['id' => $i]);
     }
 
     /**
@@ -198,8 +198,8 @@ class AppFixtures extends Fixture
     {
         $this->createUsers($manager);
         $this->createProviders($manager);
-        $this->createPracticioner($manager);
+        $this->createPractitioner($manager);
         $this->createPatients($manager);
-        $this->createPracticionerSchedules($manager);
+        $this->createPractitionerSchedules($manager);
     }
 }

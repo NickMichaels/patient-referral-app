@@ -3,21 +3,21 @@
 namespace App\Entity;
 
 use App\Enum\ScheduleDayOfWeek;
-use App\Repository\PracticionerScheduleRepository;
+use App\Repository\PractitionerScheduleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PracticionerScheduleRepository::class)]
-class PracticionerSchedule
+#[ORM\Entity(repositoryClass: PractitionerScheduleRepository::class)]
+class PractitionerSchedule
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'practicionerSchedules')]
+    #[ORM\ManyToOne(inversedBy: 'practitionerSchedules')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Practicioner $practicioner = null;
+    private ?Practitioner $practitioner = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTime $shiftStart = null;
@@ -33,14 +33,14 @@ class PracticionerSchedule
         return $this->id;
     }
 
-    public function getPracticioner(): ?Practicioner
+    public function getPractitioner(): ?Practitioner
     {
-        return $this->practicioner;
+        return $this->practitioner;
     }
 
-    public function setPracticioner(?Practicioner $practicioner): static
+    public function setPractitioner(?Practitioner $practitioner): static
     {
-        $this->practicioner = $practicioner;
+        $this->practitioner = $practitioner;
 
         return $this;
     }

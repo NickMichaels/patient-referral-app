@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\PatientReferral;
 use App\Entity\Patient;
-use App\Entity\Practicioner;
+use App\Entity\Practitioner;
 use App\Entity\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +53,8 @@ final class PatientReferralController extends AbstractController
             'patient_id' => "App\Entity\Patient",
             'sending_provider_id' => "App\Entity\Provider",
             'receiving_provider_id' => "App\Entity\Provider",
-            'sending_practicioner_id' => "App\Entity\Practicioner",
-            'receiving_practicioner_id' => "App\Entity\Practicioner",
+            'sending_practitioner_id' => "App\Entity\Practitioner",
+            'receiving_practitioner_id' => "App\Entity\Practitioner",
         ];
 
         foreach ($fkMap as $field => $className) {

@@ -3,18 +3,18 @@
 namespace App\Repository;
 
 use App\Model\Paginator;
-use App\Entity\Practicioner;
+use App\Entity\Practitioner;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
- * @extends ServiceEntityRepository<Practicioner>
+ * @extends ServiceEntityRepository<Practitioner>
  */
-class PracticionerRepository extends ServiceEntityRepository
+class PractitionerRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Practicioner::class);
+        parent::__construct($registry, Practitioner::class);
     }
 
     public function findAllWithPagination(int $page): Paginator
@@ -25,7 +25,7 @@ class PracticionerRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * @return Practicioner[] Returns an array of Practicioner objects
+    //     * @return Practitioner[] Returns an array of Practitioner objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -39,7 +39,7 @@ class PracticionerRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Practicioner
+    //    public function findOneBySomeField($value): ?Practitioner
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\PracticionerRepository;
+use App\Repository\PractitionerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Entity(repositoryClass: PracticionerRepository::class)]
-class Practicioner implements JsonSerializable
+#[ORM\Entity(repositoryClass: PractitionerRepository::class)]
+class Practitioner implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,7 +32,7 @@ class Practicioner implements JsonSerializable
     /**
      * @var Collection<int, Provider>
      */
-    #[ORM\ManyToMany(targetEntity: Provider::class, inversedBy: 'practicioners')]
+    #[ORM\ManyToMany(targetEntity: Provider::class, inversedBy: 'practitioners')]
     private Collection $provider;
 
     #[ORM\Column(length: 50)]
@@ -44,13 +44,13 @@ class Practicioner implements JsonSerializable
     /**
      * @var Collection<int, PatientReferral>
      */
-    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sendingPracticioner')]
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'sendingPractitioner')]
     private Collection $patientReferralsSent;
 
     /**
      * @var Collection<int, PatientReferral>
      */
-    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receivingPracticioner')]
+    #[ORM\OneToMany(targetEntity: PatientReferral::class, mappedBy: 'receivingPractitioner')]
     private Collection $patientReferralsReceived;
 
     #[ORM\Column(nullable: true)]
@@ -60,15 +60,15 @@ class Practicioner implements JsonSerializable
     private ?\DateTime $updatedAt = null;
 
     /**
-     * @var Collection<int, PracticionerSchedule>
+     * @var Collection<int, PractitionerSchedule>
      */
-    #[ORM\OneToMany(targetEntity: PracticionerSchedule::class, mappedBy: 'practicioner')]
-    private Collection $practicionerSchedules;
+    #[ORM\OneToMany(targetEntity: PractitionerSchedule::class, mappedBy: 'practitioner')]
+    private Collection $practitionerSchedules;
 
     /**
      * @var Collection<int, Appointment>
      */
-    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'practicioner')]
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'practitioner')]
     private Collection $appointments;
 
     public function __construct()
@@ -76,7 +76,7 @@ class Practicioner implements JsonSerializable
         $this->provider = new ArrayCollection();
         $this->patientReferralsSent = new ArrayCollection();
         $this->patientReferralsReceived = new ArrayCollection();
-        $this->practicionerSchedules = new ArrayCollection();
+        $this->practitionerSchedules = new ArrayCollection();
         $this->appointments = new ArrayCollection();
     }
 
@@ -223,7 +223,7 @@ class Practicioner implements JsonSerializable
     {
         if (!$this->patientReferralsSent->contains($patientReferralsSent)) {
             $this->patientReferralsSent->add($patientReferralsSent);
-            $patientReferralsSent->setSendingPracticioner($this);
+            $patientReferralsSent->setSendingPractitioner($this);
         }
 
         return $this;
@@ -233,8 +233,8 @@ class Practicioner implements JsonSerializable
     {
         if ($this->patientReferralsSent->removeElement($patientReferralsSent)) {
             // set the owning side to null (unless already changed)
-            if ($patientReferralsSent->getSendingPracticioner() === $this) {
-                $patientReferralsSent->setSendingPracticioner(null);
+            if ($patientReferralsSent->getSendingPractitioner() === $this) {
+                $patientReferralsSent->setSendingPractitioner(null);
             }
         }
 
@@ -253,7 +253,7 @@ class Practicioner implements JsonSerializable
     {
         if (!$this->patientReferralsReceived->contains($patientReferralsReceived)) {
             $this->patientReferralsReceived->add($patientReferralsReceived);
-            $patientReferralsReceived->setReceivingPracticioner($this);
+            $patientReferralsReceived->setReceivingPractitioner($this);
         }
 
         return $this;
@@ -263,8 +263,8 @@ class Practicioner implements JsonSerializable
     {
         if ($this->patientReferralsReceived->removeElement($patientReferralsReceived)) {
             // set the owning side to null (unless already changed)
-            if ($patientReferralsReceived->getReceivingPracticioner() === $this) {
-                $patientReferralsReceived->setReceivingPracticioner(null);
+            if ($patientReferralsReceived->getReceivingPractitioner() === $this) {
+                $patientReferralsReceived->setReceivingPractitioner(null);
             }
         }
 
@@ -296,29 +296,29 @@ class Practicioner implements JsonSerializable
     }
 
     /**
-     * @return Collection<int, PracticionerSchedule>
+     * @return Collection<int, PractitionerSchedule>
      */
-    public function getPracticionerSchedules(): Collection
+    public function getPractitionerSchedules(): Collection
     {
-        return $this->practicionerSchedules;
+        return $this->practitionerSchedules;
     }
 
-    public function addPracticionerSchedule(PracticionerSchedule $practicionerSchedule): static
+    public function addPractitionerSchedule(PractitionerSchedule $practitionerSchedule): static
     {
-        if (!$this->practicionerSchedules->contains($practicionerSchedule)) {
-            $this->practicionerSchedules->add($practicionerSchedule);
-            $practicionerSchedule->setPracticioner($this);
+        if (!$this->practitionerSchedules->contains($practitionerSchedule)) {
+            $this->practitionerSchedules->add($practitionerSchedule);
+            $practitionerSchedule->setPractitioner($this);
         }
 
         return $this;
     }
 
-    public function removePracticionerSchedule(PracticionerSchedule $practicionerSchedule): static
+    public function removePractitionerSchedule(PractitionerSchedule $practitionerSchedule): static
     {
-        if ($this->practicionerSchedules->removeElement($practicionerSchedule)) {
+        if ($this->practitionerSchedules->removeElement($practitionerSchedule)) {
             // set the owning side to null (unless already changed)
-            if ($practicionerSchedule->getPracticioner() === $this) {
-                $practicionerSchedule->setPracticioner(null);
+            if ($practitionerSchedule->getPractitioner() === $this) {
+                $practitionerSchedule->setPractitioner(null);
             }
         }
 
@@ -337,7 +337,7 @@ class Practicioner implements JsonSerializable
     {
         if (!$this->appointments->contains($appointment)) {
             $this->appointments->add($appointment);
-            $appointment->setPracticioner($this);
+            $appointment->setPractitioner($this);
         }
 
         return $this;
@@ -347,8 +347,8 @@ class Practicioner implements JsonSerializable
     {
         if ($this->appointments->removeElement($appointment)) {
             // set the owning side to null (unless already changed)
-            if ($appointment->getPracticioner() === $this) {
-                $appointment->setPracticioner(null);
+            if ($appointment->getPractitioner() === $this) {
+                $appointment->setPractitioner(null);
             }
         }
 

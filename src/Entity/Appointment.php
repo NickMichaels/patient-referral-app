@@ -17,7 +17,7 @@ class Appointment
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Practicioner $practicioner = null;
+    private ?Practitioner $practitioner = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     #[ORM\JoinColumn(nullable: false)]
@@ -50,14 +50,14 @@ class Appointment
         return $this->id;
     }
 
-    public function getPracticioner(): ?Practicioner
+    public function getPractitioner(): ?Practitioner
     {
-        return $this->practicioner;
+        return $this->practitioner;
     }
 
-    public function setPracticioner(?Practicioner $practicioner): static
+    public function setPractitioner(?Practitioner $practitioner): static
     {
-        $this->practicioner = $practicioner;
+        $this->practitioner = $practitioner;
 
         return $this;
     }

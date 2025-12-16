@@ -7,15 +7,15 @@ use App\Entity\Patient;
 use App\Entity\Provider;
 use App\Entity\Appointment;
 use App\Cache\ProviderCache;
-use App\Entity\Practicioner;
+use App\Entity\Practitioner;
 use App\Entity\PatientReferral;
 use App\Enum\AppointmentStatus;
 use App\Enum\PatientReferralStatus;
-use App\Entity\PracticionerSchedule;
+use App\Entity\PractitionerSchedule;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\PracticionerScheduleRepository;
+use App\Repository\PractitionerScheduleRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -116,8 +116,8 @@ final class ProviderController extends AbstractController
         return $this->json(null, 204);
     }
 
-    #[Route("/api/providers/{id}/add_practicioner", methods: ["POST"])]
-    public function addPracticioner(
+    #[Route("/api/providers/{id}/add_practitioner", methods: ["POST"])]
+    public function addPractitioner(
         Request $request,
         EntityManagerInterface $em,
         Provider $provider
@@ -125,24 +125,24 @@ final class ProviderController extends AbstractController
         $content = $request->getContent();
         $json = json_decode($content);
 
-        if (!property_exists($json, 'practicioner_id')) {
-            return $this->json("No practicioner id passed in request", 404);
+        if (!property_exists($json, 'practitioner_id')) {
+            return $this->json("No practitioner id passed in request", 404);
         }
-        $practicioner = $em->getRepository(Practicioner::class)->findOneBy(
-            ['id' => $json->practicioner_id]
+        $practitioner = $em->getRepository(Practitioner::class)->findOneBy(
+            ['id' => $json->practitioner_id]
         );
 
-        if (!$practicioner instanceof Practicioner) {
-            return $this->json("Practicioner does not exist", 404);
+        if (!$practitioner instanceof Practitioner) {
+            return $this->json("Practitioner does not exist", 404);
         }
 
-        $provider->addPracticioner($practicioner);
+        $provider->addPractitioner($practitioner);
         $em->flush();
-        return $this->json("Practicioner added to provider", 200);
+        return $this->json("Practitioner added to provider", 200);
     }
 
-    #[Route("/api/providers/{id}/remove_practicioner", methods: ["POST"])]
-    public function removePracticioner(
+    #[Route("/api/providers/{id}/remove_practitioner", methods: ["POST"])]
+    public function removePractitioner(
         Request $request,
         EntityManagerInterface $em,
         Provider $provider
@@ -150,20 +150,20 @@ final class ProviderController extends AbstractController
         $content = $request->getContent();
         $json = json_decode($content);
 
-        if (!property_exists($json, 'practicioner_id')) {
-            return $this->json("No practicioner id passed in request", 404);
+        if (!property_exists($json, 'practitioner_id')) {
+            return $this->json("No practitioner id passed in request", 404);
         }
-        $practicioner = $em->getRepository(Practicioner::class)->findOneBy(
-            ['id' => $json->practicioner_id]
+        $practitioner = $em->getRepository(Practitioner::class)->findOneBy(
+            ['id' => $json->practitioner_id]
         );
 
-        if (!$practicioner instanceof Practicioner) {
-            return $this->json("Practicioner does not exist", 404);
+        if (!$practitioner instanceof Practitioner) {
+            return $this->json("Practitioner does not exist", 404);
         }
 
-        $provider->removePracticioner($practicioner);
+        $provider->removePractitioner($practitioner);
         $em->flush();
-        return $this->json("Practicioner removed from provider", 200);
+        return $this->json("Practitioner removed from provider", 200);
     }
 
     #[Route("/api/providers/{id}/send_referral", methods: ["POST"])]
@@ -201,24 +201,24 @@ final class ProviderController extends AbstractController
         $patientReferral->setStatus(PatientReferralStatus::Pending);
         $patientReferral->setDateSent(new DateTime());
 
-        // Handle optional practicioner cases here
-        if (property_exists($json, 'sending_practicioner_id')) {
-            $sendingPracticioner = $em->getRepository(Practicioner::class)->findOneBy(
-                ['id' => $json->sending_practicioner_id]
+        // Handle optional practitioner cases here
+        if (property_exists($json, 'sending_practitioner_id')) {
+            $sendingPractitioner = $em->getRepository(Practitioner::class)->findOneBy(
+                ['id' => $json->sending_practitioner_id]
             );
 
-            if ($sendingPracticioner instanceof Practicioner) {
-                $patientReferral->setSendingPracticioner($sendingPracticioner);
+            if ($sendingPractitioner instanceof Practitioner) {
+                $patientReferral->setSendingPractitioner($sendingPractitioner);
             }
         }
 
-        if (property_exists($json, 'receiving_practicioner_id')) {
-            $receivingPracticioner = $em->getRepository(Practicioner::class)->findOneBy(
-                ['id' => $json->receiving_practicioner_id]
+        if (property_exists($json, 'receiving_practitioner_id')) {
+            $receivingPractitioner = $em->getRepository(Practitioner::class)->findOneBy(
+                ['id' => $json->receiving_practitioner_id]
             );
 
-            if ($receivingPracticioner instanceof Practicioner) {
-                $patientReferral->setReceivingPracticioner($receivingPracticioner);
+            if ($receivingPractitioner instanceof Practitioner) {
+                $patientReferral->setReceivingPractitioner($receivingPractitioner);
             }
         }
 
@@ -271,16 +271,16 @@ final class ProviderController extends AbstractController
             }
         }
 
-        $practicioner = $em->getRepository(Practicioner::class)->findOneBy(
-            ['id' => $json->practicioner_id]
+        $practitioner = $em->getRepository(Practitioner::class)->findOneBy(
+            ['id' => $json->practitioner_id]
         );
 
-        if (!$practicioner instanceof Practicioner) {
-            return $this->json("Practicioner does not exist", 404);
+        if (!$practitioner instanceof Practitioner) {
+            return $this->json("Practitioner does not exist", 404);
         }
 
-        // Check and see if the requested times fall with the practicioners schedule
-        $practId = $json->practicioner_id;
+        // Check and see if the requested times fall with the practitioners schedule
+        $practId = $json->practitioner_id;
         // Now we need to parse the times
         $startDate = new DateTime($json->start_time);
         $endDate = new DateTime($json->end_time);
@@ -290,8 +290,8 @@ final class ProviderController extends AbstractController
 
         // For the sake of simplicity, lets assume that start and end
         // times are always going to be on the same day
-        $onSchedule = $em->getRepository(PracticionerSchedule::class)
-            ->findByPracticionerId(
+        $onSchedule = $em->getRepository(PractitionerSchedule::class)
+            ->findByPractitionerId(
                 $practId,
                 $startTime,
                 $endTime
@@ -299,26 +299,26 @@ final class ProviderController extends AbstractController
 
         if (empty($onSchedule)) {
             // Technically they aren't scheduled but we dont need to share that
-            return $this->json("Practicioner is not available at the requested times", 404);
+            return $this->json("Practitioner is not available at the requested times", 404);
         }
 
-        // Check and see if the practicioner already has something scheduled
+        // Check and see if the practitioner already has something scheduled
         $appts = $em->getRepository(Appointment::class)
-            ->findPracticionerAppointments(
+            ->findPractitionerAppointments(
                 $practId,
                 $startDate->format('Y-m-d H:i:s'),
                 $endDate->format('Y-m-d H:i:s'),
             );
 
         if ($appts[0]['appointment_no'] > 0) {
-            return $this->json("Practicioner is not available at the requested times", 404);
+            return $this->json("Practitioner is not available at the requested times", 404);
         }
 
         // Ok now we can create the appointment
         $appointment = new Appointment();
         $appointment->setPatient($patient);
         $appointment->setProvider($provider);
-        $appointment->setPracticioner($practicioner);
+        $appointment->setPractitioner($practitioner);
         $appointment->setStartTime($startDate);
         $appointment->setEndTime($endDate);
         $appointment->setStatus(AppointmentStatus::Scheduled);
@@ -336,20 +336,20 @@ final class ProviderController extends AbstractController
         return $this->json("Patient scheduled", 200);
     }
 
-    #[Route("/api/providers/{id}/practicioners", methods: ["GET"])]
-    public function getAssociatedPracticioners(
+    #[Route("/api/providers/{id}/practitioners", methods: ["GET"])]
+    public function getAssociatedPractitioners(
         EntityManagerInterface $em,
         Provider $provider,
         SerializerInterface $serializer
     ): JsonResponse {
-        $practicioners = $provider->getPracticioners();
+        $practitioners = $provider->getPractitioners();
 
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
                 return $object->getId(); // Return the ID instead of the full object
             },
         ];
-        $jsonContent = $serializer->serialize($practicioners, 'json', $context);
+        $jsonContent = $serializer->serialize($practitioners, 'json', $context);
 
         return JsonResponse::fromJsonString($jsonContent);
     }

@@ -18,14 +18,14 @@ class AppointmentRepository extends ServiceEntityRepository
 
     /**
      * Returns an array of appointments that are already booked
-     * for a given practicioner
+     * for a given practitioner
      *
      * @param  int    $practId
      * @param  string $startTime
      * @param  string $endTime
      * @return array<mixed>
      */
-    public function findPracticionerAppointments(
+    public function findPractitionerAppointments(
         int $practId,
         string $startTime,
         string $endTime
@@ -35,7 +35,7 @@ class AppointmentRepository extends ServiceEntityRepository
         $sql = '
             SELECT COUNT(*) AS appointment_no
             FROM appointment a
-            WHERE a.practicioner_id = :pid
+            WHERE a.practitioner_id = :pid
             AND a.start_time < :end_time
             AND a.end_time > :start_time
             ORDER BY a.id ASC

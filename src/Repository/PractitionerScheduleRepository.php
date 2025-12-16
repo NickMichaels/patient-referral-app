@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\PracticionerSchedule;
+use App\Entity\PractitionerSchedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<PracticionerSchedule>
+ * @extends ServiceEntityRepository<PractitionerSchedule>
  */
-class PracticionerScheduleRepository extends ServiceEntityRepository
+class PractitionerScheduleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PracticionerSchedule::class);
+        parent::__construct($registry, PractitionerSchedule::class);
     }
 
     /**
-     * Returns an array of practicioners that are available
+     * Returns an array of practitioners that are available
      * to be scheduled as per their shifts, not existing appointments
      *
      * @param  int    $practId
@@ -25,7 +25,7 @@ class PracticionerScheduleRepository extends ServiceEntityRepository
      * @param  string $endTime
      * @return array<mixed>
      */
-    public function findByPracticionerId(
+    public function findByPractitionerId(
         int $practId,
         string $startTime,
         string $endTime
@@ -33,9 +33,9 @@ class PracticionerScheduleRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT DISTINCT p.practicioner_id
-            FROM practicioner_schedule p
-            WHERE p.practicioner_id = :pid
+            SELECT DISTINCT p.practitioner_id
+            FROM practitioner_schedule p
+            WHERE p.practitioner_id = :pid
             AND p.shift_start <= :start_time
             AND p.shift_end >= :end_time;
             ORDER BY p.id ASC
@@ -54,7 +54,7 @@ class PracticionerScheduleRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * @return PracticionerSchedule[] Returns an array of PracticionerSchedule objects
+    //     * @return PractitionerSchedule[] Returns an array of PractitionerSchedule objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -68,7 +68,7 @@ class PracticionerScheduleRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?PracticionerSchedule
+    //    public function findOneBySomeField($value): ?PractitionerSchedule
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

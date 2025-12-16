@@ -3,9 +3,9 @@
 namespace App\Controller\Api;
 
 use Exception;
-use App\Entity\Practicioner;
+use App\Entity\Practitioner;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\PracticionerRepository;
+use App\Repository\PractitionerRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\OptionsResolver\PaginatorOptionsResolver;
@@ -17,24 +17,24 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-final class PracticionerController extends AbstractController
+final class PractitionerController extends AbstractController
 {
-    #[Route('/api/practicioners', methods: ["GET"])]
+    #[Route('/api/practitioners', methods: ["GET"])]
     public function index(
         EntityManagerInterface $em,
-        PracticionerRepository $repository,
+        PractitionerRepository $repository,
         SerializerInterface $serializer,
         Request $request,
         PaginatorOptionsResolver $paginatorOptionsResolver
     ): JsonResponse {
-        $practicioners = $em->getRepository(Practicioner::class)->findAll();
+        $practitioners = $em->getRepository(Practitioner::class)->findAll();
 
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
                 return $object->getId(); // Return the ID instead of the full object
             },
         ];
-        $jsonContent = $serializer->serialize($practicioners, "json", $context);
+        $jsonContent = $serializer->serialize($practitioners, "json", $context);
         return JsonResponse::fromJsonString($jsonContent);
         /*
         try {
@@ -42,14 +42,14 @@ final class PracticionerController extends AbstractController
               ->configurePage()
               ->resolve($request->query->all());
 
-            $practicioners = $repository->findAllWithPagination($queryParams["page"]);
+            $practitioners = $repository->findAllWithPagination($queryParams["page"]);
 
             $context = [
                 AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
                     return $object->getId(); // Return the ID instead of the full object
                 },
             ];
-            $jsonContent = $serializer->serialize($practicioners, "json", $context);
+            $jsonContent = $serializer->serialize($practitioners, "json", $context);
 
             return JsonResponse::fromJsonString($jsonContent);
         } catch (Exception $e) {
@@ -59,9 +59,9 @@ final class PracticionerController extends AbstractController
     }
 
 
-    #[Route("/api/practicioners/{id}", methods: ["GET"])]
+    #[Route("/api/practitioners/{id}", methods: ["GET"])]
     public function show(
-        Practicioner $practicioner,
+        Practitioner $practitioner,
         SerializerInterface $serializer
     ): JsonResponse {
         $context = [
@@ -69,12 +69,12 @@ final class PracticionerController extends AbstractController
                 return $object->getId(); // Return the ID instead of the full object
             },
         ];
-        $jsonContent = $serializer->serialize($practicioner, 'json', $context);
+        $jsonContent = $serializer->serialize($practitioner, 'json', $context);
 
         return JsonResponse::fromJsonString($jsonContent);
     }
 
-    #[Route("/api/practicioners", methods: ["POST"])]
+    #[Route("/api/practitioners", methods: ["POST"])]
     public function create(
         Request $request,
         SerializerInterface $serializer,
@@ -83,9 +83,9 @@ final class PracticionerController extends AbstractController
     ): JsonResponse {
         $content = $request->getContent();
 
-        $practicioner = $serializer->deserialize($content, Practicioner::class, "json");
+        $practitioner = $serializer->deserialize($content, Practitioner::class, "json");
 
-        $errors = $validator->validate($practicioner);
+        $errors = $validator->validate($practitioner);
         if (count($errors) > 0) {
             $errorMessages = [];
 
@@ -96,24 +96,24 @@ final class PracticionerController extends AbstractController
             return $this->json(["errors" => $errorMessages], 422);
         }
 
-        $em->persist($practicioner);
+        $em->persist($practitioner);
         $em->flush();
 
-        return $this->json($practicioner, 201);
+        return $this->json($practitioner, 201);
     }
 
-    #[Route("/api/practicioners/{id}", methods: ["PUT", "PATCH"])]
+    #[Route("/api/practitioners/{id}", methods: ["PUT", "PATCH"])]
     public function update(
         Request $request,
-        Practicioner $practicioner,
+        Practitioner $practitioner,
         SerializerInterface $serializer,
         EntityManagerInterface $em
     ): JsonResponse {
         $serializer->deserialize(
             $request->getContent(),
-            Practicioner::class,
+            Practitioner::class,
             "json",
-            ["object_to_populate" => $practicioner]
+            ["object_to_populate" => $practitioner]
         );
 
         $em->flush();
@@ -123,30 +123,30 @@ final class PracticionerController extends AbstractController
                 return $object->getId(); // Return the ID instead of the full object
             },
         ];
-        $jsonContent = $serializer->serialize($practicioner, 'json', $context);
+        $jsonContent = $serializer->serialize($practitioner, 'json', $context);
 
         return JsonResponse::fromJsonString($jsonContent);
     }
 
-    #[Route("/api/practicioners/{id}", methods: ["DELETE"])]
+    #[Route("/api/practitioners/{id}", methods: ["DELETE"])]
     public function delete(
         EntityManagerInterface $em,
-        Practicioner $practicioner
+        Practitioner $practitioner
     ): JsonResponse {
-        $em->remove($practicioner);
+        $em->remove($practitioner);
 
         $em->flush();
 
         return $this->json(null, 204);
     }
 
-    #[Route("/api/practicioners/{id}/referrals_sent", methods: ["GET"])]
+    #[Route("/api/practitioners/{id}/referrals_sent", methods: ["GET"])]
     public function getReferralsSent(
         EntityManagerInterface $em,
-        Practicioner $practicioner,
+        Practitioner $practitioner,
         SerializerInterface $serializer
     ): JsonResponse {
-        $referralsSent = $practicioner->getPatientReferralsSent();
+        $referralsSent = $practitioner->getPatientReferralsSent();
 
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
@@ -158,13 +158,13 @@ final class PracticionerController extends AbstractController
         return JsonResponse::fromJsonString($jsonContent);
     }
 
-    #[Route("/api/practicioners/{id}/referrals_received", methods: ["GET"])]
+    #[Route("/api/practitioners/{id}/referrals_received", methods: ["GET"])]
     public function getReferralsReceived(
         EntityManagerInterface $em,
-        Practicioner $practicioner,
+        Practitioner $practitioner,
         SerializerInterface $serializer
     ): JsonResponse {
-        $referralsReceived = $practicioner->getPatientReferralsReceived();
+        $referralsReceived = $practitioner->getPatientReferralsReceived();
 
         $context = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {

@@ -42,10 +42,10 @@ class Provider implements JsonSerializable
     private ?string $email = null;
 
     /**
-     * @var Collection<int, Practicioner>
+     * @var Collection<int, Practitioner>
      */
-    #[ORM\ManyToMany(targetEntity: Practicioner::class, mappedBy: 'provider')]
-    private Collection $practicioners;
+    #[ORM\ManyToMany(targetEntity: Practitioner::class, mappedBy: 'provider')]
+    private Collection $practitioners;
 
     #[ORM\Column(length: 50)]
     private ?string $phone = null;
@@ -76,7 +76,7 @@ class Provider implements JsonSerializable
 
     public function __construct()
     {
-        $this->practicioners = new ArrayCollection();
+        $this->practitioners = new ArrayCollection();
         $this->patientReferralsSent = new ArrayCollection();
         $this->patientReferralsReceived = new ArrayCollection();
         $this->appointments = new ArrayCollection();
@@ -215,27 +215,27 @@ class Provider implements JsonSerializable
     }
 
     /**
-     * @return Collection<int, Practicioner>
+     * @return Collection<int, Practitioner>
      */
-    public function getPracticioners(): Collection
+    public function getPractitioners(): Collection
     {
-        return $this->practicioners;
+        return $this->practitioners;
     }
 
-    public function addPracticioner(Practicioner $practicioner): static
+    public function addPractitioner(Practitioner $practitioner): static
     {
-        if (!$this->practicioners->contains($practicioner)) {
-            $this->practicioners->add($practicioner);
-            $practicioner->addProvider($this);
+        if (!$this->practitioners->contains($practitioner)) {
+            $this->practitioners->add($practitioner);
+            $practitioner->addProvider($this);
         }
 
         return $this;
     }
 
-    public function removePracticioner(Practicioner $practicioner): static
+    public function removePractitioner(Practitioner $practitioner): static
     {
-        if ($this->practicioners->removeElement($practicioner)) {
-            $practicioner->removeProvider($this);
+        if ($this->practitioners->removeElement($practitioner)) {
+            $practitioner->removeProvider($this);
         }
 
         return $this;

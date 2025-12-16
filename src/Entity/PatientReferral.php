@@ -30,10 +30,10 @@ class PatientReferral implements JsonSerializable
     private ?Provider $receivingProvider = null;
 
     #[ORM\ManyToOne(inversedBy: 'patientReferralsSent')]
-    private ?Practicioner $sendingPracticioner = null;
+    private ?Practitioner $sendingPractitioner = null;
 
     #[ORM\ManyToOne(inversedBy: 'patientReferralsReceived')]
-    private ?Practicioner $receivingPracticioner = null;
+    private ?Practitioner $receivingPractitioner = null;
 
     #[ORM\Column(enumType: PatientReferralStatus::class)]
     private ?PatientReferralStatus $status = null;
@@ -67,14 +67,14 @@ class PatientReferral implements JsonSerializable
             'sendingProviderName' => $this->getSendingProvider()->getName(),
             'receivingProvider' => $this->getReceivingProvider()->getId(),
             'receivingProviderName' => $this->getReceivingProvider()->getName(),
-            'sendingPracticioner' => ($this->getSendingPracticioner() !== null) ?
-                $this->getSendingPracticioner()->getId() : '',
-            'sendingPracticionerName' => ($this->getSendingPracticioner() !== null) ?
-                $this->getSendingPracticioner()->getName() : '',
-            'receivingPracticioner' => ($this->getReceivingPracticioner() !== null) ?
-                $this->getReceivingPracticioner()->getId() : '',
-            'receivingPracticionerName' => ($this->getReceivingPracticioner() !== null) ?
-                $this->getReceivingPracticioner()->getName() : '',
+            'sendingPractitioner' => ($this->getSendingPractitioner() !== null) ?
+                $this->getSendingPractitioner()->getId() : '',
+            'sendingPractitionerName' => ($this->getSendingPractitioner() !== null) ?
+                $this->getSendingPractitioner()->getName() : '',
+            'receivingPractitioner' => ($this->getReceivingPractitioner() !== null) ?
+                $this->getReceivingPractitioner()->getId() : '',
+            'receivingPractitionerName' => ($this->getReceivingPractitioner() !== null) ?
+                $this->getReceivingPractitioner()->getName() : '',
             'status' => $this->getStatus()->value,
             'dateSent' => $this->getDateSent()->format('m-d-Y h:m:s'),
         ];
@@ -121,26 +121,26 @@ class PatientReferral implements JsonSerializable
         return $this;
     }
 
-    public function getSendingPracticioner(): ?Practicioner
+    public function getSendingPractitioner(): ?Practitioner
     {
-        return $this->sendingPracticioner;
+        return $this->sendingPractitioner;
     }
 
-    public function setSendingPracticioner(?Practicioner $sendingPracticioner): static
+    public function setSendingPractitioner(?Practitioner $sendingPractitioner): static
     {
-        $this->sendingPracticioner = $sendingPracticioner;
+        $this->sendingPractitioner = $sendingPractitioner;
 
         return $this;
     }
 
-    public function getReceivingPracticioner(): ?Practicioner
+    public function getReceivingPractitioner(): ?Practitioner
     {
-        return $this->receivingPracticioner;
+        return $this->receivingPractitioner;
     }
 
-    public function setReceivingPracticioner(?Practicioner $receivingPracticioner): static
+    public function setReceivingPractitioner(?Practitioner $receivingPractitioner): static
     {
-        $this->receivingPracticioner = $receivingPracticioner;
+        $this->receivingPractitioner = $receivingPractitioner;
 
         return $this;
     }
