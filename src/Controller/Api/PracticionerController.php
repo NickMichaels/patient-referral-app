@@ -21,11 +21,22 @@ final class PracticionerController extends AbstractController
 {
     #[Route('/api/practicioners', methods: ["GET"])]
     public function index(
+        EntityManagerInterface $em,
         PracticionerRepository $repository,
         SerializerInterface $serializer,
         Request $request,
         PaginatorOptionsResolver $paginatorOptionsResolver
     ): JsonResponse {
+        $practicioners = $em->getRepository(Practicioner::class)->findAll();
+
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId(); // Return the ID instead of the full object
+            },
+        ];
+        $jsonContent = $serializer->serialize($practicioners, "json", $context);
+        return JsonResponse::fromJsonString($jsonContent);
+        /*
         try {
             $queryParams = $paginatorOptionsResolver
               ->configurePage()
@@ -44,6 +55,7 @@ final class PracticionerController extends AbstractController
         } catch (Exception $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
+        */
     }
 
 
