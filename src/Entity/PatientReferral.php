@@ -62,12 +62,19 @@ class PatientReferral implements JsonSerializable
         return [
             'id' => $this->getId(),
             'patient' => $this->getPatient()->getId(),
+            'patientName' => $this->getPatient()->getName(),
             'sendingProvider' => $this->getSendingProvider()->getId(),
+            'sendingProviderName' => $this->getSendingProvider()->getName(),
             'receivingProvider' => $this->getReceivingProvider()->getId(),
+            'receivingProviderName' => $this->getReceivingProvider()->getName(),
             'sendingPracticioner' => ($this->getSendingPracticioner() !== null) ?
                 $this->getSendingPracticioner()->getId() : '',
+            'sendingPracticionerName' => ($this->getSendingPracticioner() !== null) ?
+                $this->getSendingPracticioner()->getName() : '',
             'receivingPracticioner' => ($this->getReceivingPracticioner() !== null) ?
                 $this->getReceivingPracticioner()->getId() : '',
+            'receivingPracticionerName' => ($this->getReceivingPracticioner() !== null) ?
+                $this->getReceivingPracticioner()->getName() : '',
             'status' => $this->getStatus()->value,
             'dateSent' => $this->getDateSent()->format('m-d-Y h:m:s'),
         ];
