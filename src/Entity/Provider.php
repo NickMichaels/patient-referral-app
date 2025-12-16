@@ -6,10 +6,11 @@ use App\Repository\ProviderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProviderRepository::class)]
-class Provider
+class Provider implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -79,6 +80,25 @@ class Provider
         $this->patientReferralsSent = new ArrayCollection();
         $this->patientReferralsReceived = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+    }
+
+    /**
+     * Serialize the Patient Referral
+     *
+     * @return array <string, int|string|null>
+     */
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'specialty' => $this->getSpecialty(),
+            'addressLine1' => $this->getAddressLine1(),
+            'addressLine2' => $this->getAddressLine2(),
+            'city' => $this->getCity(),
+            'state' => $this->getState(),
+            'email' => $this->getEmail()
+        ];
     }
 
     #[ORM\PrePersist]

@@ -34,12 +34,7 @@ final class ProviderController extends AbstractController
         //$providers = $em->getRepository(Provider::class)->findAll();
         $providers = $providerCache->findAll();
 
-        $context = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
-                return $object->getId(); // Return the ID instead of the full object
-            },
-        ];
-        $jsonContent = $serializer->serialize($providers, 'json', $context);
+        $jsonContent = $serializer->serialize($providers, 'json');
 
         return JsonResponse::fromJsonString($jsonContent);
     }
@@ -49,12 +44,7 @@ final class ProviderController extends AbstractController
         Provider $provider,
         SerializerInterface $serializer
     ): JsonResponse {
-        $context = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
-                return $object->getId(); // Return the ID instead of the full object
-            },
-        ];
-        $jsonContent = $serializer->serialize($provider, 'json', $context);
+        $jsonContent = $serializer->serialize($provider, 'json');
 
         return JsonResponse::fromJsonString($jsonContent);
     }
