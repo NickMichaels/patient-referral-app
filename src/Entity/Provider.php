@@ -97,7 +97,9 @@ class Provider implements JsonSerializable
             'addressLine2' => $this->getAddressLine2(),
             'city' => $this->getCity(),
             'state' => $this->getState(),
-            'email' => $this->getEmail()
+            'zip' => $this->getZip(),
+            'email' => $this->getEmail(),
+            'phone' => $this->getPhone(),
         ];
     }
 
