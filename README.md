@@ -1,12 +1,12 @@
 # patient-referal-app
-A Symfony REST API linking patients to healthcare providers
+A Symfony REST API linking patients to healthcare providers. Instead of scribbled down phone numbers from a PCP putting all of the onus on the patient to take next steps, healthcare providers can send patient referrals directly to another provider.
 
 ## Initial stories / requirements
-* As an admin, I want to be able to create, update and delete provider (PCP, clinic, hospital. specialist, etc.) records :white_check_mark:
-* As an admin, I want to be able to create, update and delete practitioner (doctors, nurses, physicians assistants, etc.) records :white_check_mark:
-* As an admin, I want to be able to create, update and delete patient (very limited scope - just a `name` column and `data` column - which would hold their "patient record" and could later be encoded and encrypted) records :white_check_mark:
-* As a provider, I want to be able to associate practitioners with providers :white_check_mark:
-* As a provider, I want to be able to send a patient to another provider via a patient referral :white_check_mark:
+* I want to be able to create, update and delete provider (PCP, clinic, hospital. specialist, etc.) records :white_check_mark:
+* I want to be able to create, update and delete practitioner (doctors, nurses, physicians assistants, etc.) records :white_check_mark:
+* I want to be able to create, update and delete patient (very limited scope - just a `name` column and `data` column - which would hold their "patient record" and could later be encoded and encrypted) records :white_check_mark:
+* I want to be able to associate practitioners with providers :white_check_mark:
+* I want to be able to send a patient to another provider via a patient referral :white_check_mark:
 
 ## Future Scope
 * As a provider, I want to be able to add other providers to my network.
