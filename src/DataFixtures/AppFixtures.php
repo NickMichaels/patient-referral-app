@@ -8,7 +8,9 @@ use App\Entity\User;
 use App\Entity\Patient;
 use App\Entity\Provider;
 use App\Entity\Practitioner;
+use App\Entity\PatientReferral;
 use App\Enum\ScheduleDayOfWeek;
+use App\Enum\PatientReferralStatus;
 use App\Entity\PractitionerSchedule;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -235,38 +237,41 @@ class AppFixtures extends Fixture
      */
     public function createPatientReferrals(ObjectManager $manager): void
     {
-        /*
-        for ($i = 0; $i < 10; $i++) {
-            $patient = new Patient();
-
-            $patient->setName($this->faker->firstname . " "  . $this->faker->lastName);
-
-            // Defining this as json allows us to add ot this later
-            // and as this is supposed to a small project I dont want
-            // to get too much in the weeds on details
-            $patientData = [
-                'accountNumber' => $this->faker->randomNumber(8),
-                'DOB' => $this->faker->date,
-                'address' => $this->faker->address,
-            ];
-            $patient->setData($patientData);
-
-            $patient->setEmail($this->faker->email);
-            $patient->setPhone($this->faker->phoneNumber);
-            $manager->persist($patient);
+        $provRepo = $manager->getRepository(Provider::class);
+        $pracRepo = $manager->getRepository(Practitioner::class);
+        $patRepo = $manager->getRepository(Patient::class);
+        // find five providers
+        for ($i = 1; $i < 6; $i++) {
+            $provider = $provRepo->findOneBy(['id' => $i]);
+            if ($provider instanceof Provider) {
+                // For each provider, send a random amount of referrals
+                for ($j = 0; $j < rand(2,8); $j++) {
+                    $patientRef = new PatientReferral();
+                    $patientRef->setSendingProvider($provider);
+                    // Only use practitioners associated with the provider
+                    $patientRef->setSendingPractitioner($provider->getPractitioners()[0]);
+                    // Oh it doesnt need to be this smart, just get the next one
+                    $patientRef->setReceivingProvider($provRepo->findOneBy(['id' => rand($i, $i+5)]));
+                    // Get a random patient
+                    $patientRef->setPatient($patRepo->findOneBy(['id' => rand($i, $i+5)]));
+                    $patientRef->setStatus(PatientReferralStatus::Pending);
+                    $patientRef->setDateSent(new DateTime());
+                    $manager->persist($patientRef);
+                }
+            }
+            $manager->flush();
         }
-
-        $manager->flush();
-        */
     }
 
     public function load(ObjectManager $manager): void
     {
-       //$this->createUsers($manager);
+        $this->createUsers($manager);
         $this->createProviders($manager);
         $this->createPractitioner($manager);
         $this->createPatients($manager);
         $this->createPractitionerSchedules($manager);
         $this->addPractitionersToProviders($manager);
+        $this->createPatientReferrals($manager);
+
     }
 }
