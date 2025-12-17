@@ -91,16 +91,16 @@
 |---|---|---|
 |token|your_token_here|string|
 
-## Add a Practicioner (to a Provider)
+## Add a Practitioner (to a Provider)
 ### Method: POST
 >```
-> /api/providers/{id}/add_practicioner
+> /api/providers/{id}/add_practitioner
 >```
 ### Body (**raw**)
 
 ```json
 {
-    "practicioner_id": 34
+    "practitioner_id": 34
 }
 ```
 
@@ -121,11 +121,11 @@
 {
     "patient_id": 3,
     "receiving_provider_id": 6,
-    "sending_practicioner_id":  1,
-    "receiving_practicioner_id": 6
+    "sending_practitioner_id":  1,
+    "receiving_practitioner_id": 6
 }
 ```
-_Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional parameters_
+_Note: `sending_practitioner_id` and `receiving_practitioner_id` are optional parameters_
 
 ### 🔑 Authentication bearer
 
@@ -155,10 +155,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Get All Practicioners
+## Get All Practitioners
 ### Method: GET
 >```
-> /api/practicioners
+> /api/practitioners
 >```
 ### 🔑 Authentication bearer
 
@@ -166,10 +166,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Get One Practicioner By Id
+## Get One Practitioner By Id
 ### Method: GET
 >```
-> /api/practicioners/{id}
+> /api/practitioners/{id}
 >```
 ### 🔑 Authentication bearer
 
@@ -177,10 +177,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Update a Practicioner
+## Update a Practitioner
 ### Method: PATCH
 >```
-> /api/practicioners/{id}
+> /api/practitioners/{id}
 >```
 ### Body (**raw**)
 
@@ -196,10 +196,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Delete a Practicioner
+## Delete a Practitioner
 ### Method: DELETE
 >```
-> /api/practicioners/{id}
+> /api/practitioners/{id}
 >```
 
 ### 🔑 Authentication bearer
@@ -208,10 +208,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Create a Practicioner
+## Create a Practitioner
 ### Method: POST
 >```
-> /api/practicioners
+> /api/practitioners
 >```
 ### Body (**raw**)
 
@@ -232,10 +232,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Get Sent Referrals (for a Practicioner)
+## Get Sent Referrals (for a Practitioner)
 ### Method: POST
 >```
-> /api/practicioners/{id}/referrals_sent
+> /api/practitioners/{id}/referrals_sent
 >```
 ### 🔑 Authentication bearer
 
@@ -243,10 +243,10 @@ _Note: `sending_practicioner_id` and `receiving_practicioner_id` are optional pa
 |---|---|---|
 |token|your_token_here|string|
 
-## Get Received Referrals (for a Practicioner)
+## Get Received Referrals (for a Practitioner)
 ### Method: POST
 >```
-> /api/practicioners/{id}/referrals_received
+> /api/practitioners/{id}/referrals_received
 >```
 ### 🔑 Authentication bearer
 

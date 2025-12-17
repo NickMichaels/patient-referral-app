@@ -61,7 +61,7 @@ openssl genrsa -out ./config/jwt/private.pem
 openssl rsa -in config/jwt/private.pem -pubout > config/jwt/public.pem
 ```
 
-8. Mod and run the AppFixtures file to create users, s, practicioners and patients
+8. Mod and run the AppFixtures file to create users, s, practitioners and patients
 
     - In function createUsers, modify the `$user->setEmail(“your_email_here@example.com”)` and `$user->setPassword('your_hashed_pw_here')` to use your own dummy data. you can follow the instruction in the comments to hash your own password using a symfony command.  
 
@@ -107,3 +107,6 @@ Copy the token it gives you back. You can now use this to retrieve info via the 
  
 ![Use API Token](assets/use_api_token.png)
 
+## API Documentation
+
+[API Docs](https://github.com/NickMichaels/patient-referral-app/blob/main/docs/api_documentation.md)
