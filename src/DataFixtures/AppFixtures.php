@@ -67,6 +67,61 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    public function generateMedicalProviderName(): string
+    {
+        $cityNames = [
+            'Oak', 'Pine', 'Cedar', 'Maple', 'Riverside', 'Lakeside',
+            'Valley', 'Summit', 'Hillcrest', 'Meadowbrook', 'Brookside',
+            'Fairview', 'Greenfield', 'Northshore', 'Westview'
+        ];
+
+        $lastNames = [
+            'Smith', 'Johnson', 'Williams', 'Brown', 'Taylor', 'Anderson',
+            'Martinez', 'Lee', 'Patel', 'Nguyen', 'Garcia', 'Miller',
+            'Thompson', 'Harris', 'Clark', 'Rodriguez'
+        ];
+
+        $specialties = [
+            'Family Medicine', 'Internal Medicine', 'Pediatrics',
+            'Cardiology', 'Dermatology', 'Orthopedics', 'Neurology',
+            'Women’s Health', 'Urology', 'Endocrinology',
+            'Pulmonary', 'Gastroenterology', 'Oncology', 'Rheumatology'
+        ];
+
+        $providerTypes = [
+            'Medical Group', 'Clinic', 'Health Center',
+            'Physicians', 'Associates', 'Care', 'Medical Associates'
+        ];
+
+        $hospitalTerms = [
+            'Hospital', 'Medical Center', 'Regional Medical Center',
+            'Community Hospital', 'Health System'
+        ];
+
+        $patterns = [
+            // Doctor / group based
+            fn() => "Dr. " . $this->randomItem($lastNames) . " " . $this->randomItem(['MD', 'DO']),
+            fn() => $this->randomItem($lastNames) . " " . $this->randomItem($providerTypes),
+            fn() => $this->randomItem($lastNames) . " & " . $this->randomItem($lastNames) . " " . $this->randomItem(['Physicians', 'Medical Group']),
+            fn() => $this->randomItem($cityNames) . " " . $this->randomItem($specialties),
+
+            // Clinics
+            fn() => $this->randomItem($cityNames) . " " . $this->randomItem(['Family', 'Primary', 'Specialty']) . " Care",
+            fn() => $this->randomItem($cityNames) . " " . $this->randomItem($providerTypes),
+
+            // Hospitals
+            fn() => $this->randomItem($cityNames) . " " . $this->randomItem($hospitalTerms),
+            fn() => randomItem($cityNames) . " Regional " . randomItem(['Hospital', 'Medical Center']),
+        ];
+
+        return $patterns[array_rand($patterns)]();
+    }
+
+    public function randomItem(array $array)
+    {
+        return $array[array_rand($array)];
+    }
+
     /**
      * Create some providers
      *
@@ -77,7 +132,7 @@ class AppFixtures extends Fixture
     {
         for ($i = 0; $i < 10; $i++) {
             $provider = new Provider();
-            $provider->setName($this->faker->company);
+            $provider->setName($this->generateMedicalProviderName());
             $provider->setAddressLine1($this->faker->streetAddress);
             $provider->setCity($this->faker->city);
             $provider->setState($this->faker->state);
@@ -272,6 +327,5 @@ class AppFixtures extends Fixture
         $this->createPractitionerSchedules($manager);
         $this->addPractitionersToProviders($manager);
         $this->createPatientReferrals($manager);
-
     }
 }
