@@ -194,12 +194,79 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    /**
+     * Add some practitioners to providers
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function addPractitionersToProviders(ObjectManager $manager): void
+    {
+        $provRepo = $manager->getRepository(Provider::class);
+        $pracRepo = $manager->getRepository(Practitioner::class);
+        // find five providers
+        for ($i = 1; $i < 6; $i++) {
+            $provider = $provRepo->findOneBy(['id' => $i]);
+            if ($provider instanceof Provider) {
+                $numToAdd = rand(4, 7);
+                for ($j = 1; $j < $numToAdd; $j++) {
+                    $prac = $pracRepo->findOneBy(['id' => $j]);
+                    if ($prac instanceof Practitioner) {
+                        $provider->addPractitioner($prac);
+                    } else {
+                        continue;
+                    }
+                }
+            } else {
+                continue;
+            }
+
+            $manager->flush();
+        }
+
+        $manager->flush();
+    }
+
+    /**
+     * Create some patient referrals
+     *
+     * @param  ObjectManager $manager
+     * @return void
+     */
+    public function createPatientReferrals(ObjectManager $manager): void
+    {
+        /*
+        for ($i = 0; $i < 10; $i++) {
+            $patient = new Patient();
+
+            $patient->setName($this->faker->firstname . " "  . $this->faker->lastName);
+
+            // Defining this as json allows us to add ot this later
+            // and as this is supposed to a small project I dont want
+            // to get too much in the weeds on details
+            $patientData = [
+                'accountNumber' => $this->faker->randomNumber(8),
+                'DOB' => $this->faker->date,
+                'address' => $this->faker->address,
+            ];
+            $patient->setData($patientData);
+
+            $patient->setEmail($this->faker->email);
+            $patient->setPhone($this->faker->phoneNumber);
+            $manager->persist($patient);
+        }
+
+        $manager->flush();
+        */
+    }
+
     public function load(ObjectManager $manager): void
     {
-        $this->createUsers($manager);
+       //$this->createUsers($manager);
         $this->createProviders($manager);
         $this->createPractitioner($manager);
         $this->createPatients($manager);
         $this->createPractitionerSchedules($manager);
+        $this->addPractitionersToProviders($manager);
     }
 }
